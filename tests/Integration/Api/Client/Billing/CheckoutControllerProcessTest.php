@@ -9,7 +9,7 @@ use Everest\Models\Billing\Product;
 use Everest\Models\Billing\Category;
 use Everest\Tests\Integration\Api\Client\ClientApiIntegrationTestCase;
 
-class StripeControllerTest extends ClientApiIntegrationTestCase
+class CheckoutControllerProcessTest extends ClientApiIntegrationTestCase
 {
     /**
      * ClientApiIntegrationTestCase's tearDown() does not know about billing
@@ -124,7 +124,7 @@ class StripeControllerTest extends ClientApiIntegrationTestCase
             'discount_code' => '',
         ]);
 
-        $response = $this->actingAs($user)->postJson('/api/client/billing/stripe/process', [
+        $response = $this->actingAs($user)->postJson('/api/client/billing/checkout/process', [
             'session' => $sessionId,
         ]);
 
@@ -162,7 +162,7 @@ class StripeControllerTest extends ClientApiIntegrationTestCase
             'discount_code' => '',
         ]);
 
-        $response = $this->actingAs($user)->postJson('/api/client/billing/stripe/process', [
+        $response = $this->actingAs($user)->postJson('/api/client/billing/checkout/process', [
             'session' => $sessionId,
         ]);
 

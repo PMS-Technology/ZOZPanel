@@ -10,7 +10,7 @@ use Everest\Models\Billing\DiscountCode;
 use Everest\Tests\Traits\Integration\CreatesBillingTestModels;
 use Everest\Tests\Integration\Api\Client\ClientApiIntegrationTestCase;
 
-class StripeControllerCreateTest extends ClientApiIntegrationTestCase
+class CheckoutControllerCreateTest extends ClientApiIntegrationTestCase
 {
     use CreatesBillingTestModels;
 
@@ -57,10 +57,14 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
 
         $this->stubSessionCreate('cs_test_fee', 'https://checkout.stripe.test/fee');
 
-        $this->actingAs($user)->postJson('/api/client/billing/stripe/create', [
+        $response = $this->actingAs($user)->postJson('/api/client/billing/checkout/create', [
+            'payment_method' => 'stripe',
             'product_id' => $product->id,
             'node_id' => $node->id,
-        ])->assertOk();
+        ]);
+
+        $response->assertOk();
+        $this->assertSame('https://checkout.stripe.test/fee', $response->json('url'));
 
         $order = Order::where('transaction_id', 'cs_test_fee')->firstOrFail();
 
@@ -68,7 +72,7 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
         // assertEquals (not assertSame): Order.metadata round-trips through a JSON
         // column, and PHP's json_encode drops the ".0" off whole-number floats.
         $this->assertEquals(5.25, $order->metadata['deployment_fee']);
-        $this->assertArrayNotHasKey('discount_code', $order->metadata);
+        $this->assertNull($order->metadata['discount_code']);
     }
 
     public function testDiscountCodeIsCapturedInOrderMetadata(): void
@@ -87,11 +91,14 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
 
         $this->stubSessionCreate('cs_test_discount', 'https://checkout.stripe.test/discount');
 
-        $this->actingAs($user)->postJson('/api/client/billing/stripe/create', [
+        $response = $this->actingAs($user)->postJson('/api/client/billing/checkout/create', [
+            'payment_method' => 'stripe',
             'product_id' => $product->id,
             'server_id' => $this->createServerModel(['user_id' => $user->id])->id,
             'discount_code' => 'SAVE5NOW',
-        ])->assertOk();
+        ]);
+
+        $response->assertOk();
 
         $order = Order::where('transaction_id', 'cs_test_discount')->firstOrFail();
 
@@ -100,7 +107,7 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
         $this->assertEquals(20.50, $order->metadata['subtotal']);
     }
 
-    public function testOrderMetadataIsNullWhenThereIsNoFeeOrDiscount(): void
+    public function testOrderMetadataHasNoFeeOrSubtotalWhenThereIsNeither(): void
     {
         $user = User::factory()->create();
         $product = $this->makeProduct(['price' => 10.00]);
@@ -108,15 +115,22 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
 
         $this->stubSessionCreate('cs_test_plain', 'https://checkout.stripe.test/plain');
 
-        $this->actingAs($user)->postJson('/api/client/billing/stripe/create', [
+        $response = $this->actingAs($user)->postJson('/api/client/billing/checkout/create', [
+            'payment_method' => 'stripe',
             'product_id' => $product->id,
             'node_id' => $node->id,
-        ])->assertOk();
+        ]);
+
+        $response->assertOk();
 
         $order = Order::where('transaction_id', 'cs_test_plain')->firstOrFail();
 
         $this->assertSame(10.00, $order->total);
-        $this->assertNull($order->metadata);
+        // The checkout details are kept on the order, but the amounts that do not
+        // apply are left out rather than stored as null.
+        $this->assertArrayNotHasKey('deployment_fee', $order->metadata);
+        $this->assertArrayNotHasKey('subtotal', $order->metadata);
+        $this->assertSame('stripe', $order->metadata['payment_channel']);
     }
 
     public function testCannotCreateACheckoutSessionForANonDeployableNode(): void
@@ -125,7 +139,23 @@ class StripeControllerCreateTest extends ClientApiIntegrationTestCase
         $product = $this->makeProduct();
         $node = Node::factory()->create(['deployable' => false]);
 
-        $this->actingAs($user)->postJson('/api/client/billing/stripe/create', [
+        $this->actingAs($user)->postJson('/api/client/billing/checkout/create', [
+            'payment_method' => 'stripe',
+            'product_id' => $product->id,
+            'node_id' => $node->id,
+        ])->assertStatus(400);
+
+        $this->assertSame(0, Order::count());
+    }
+
+    public function testCheckoutIsRejectedWhenThePaymentMethodIsNotOffered(): void
+    {
+        $user = User::factory()->create();
+        $product = $this->makeProduct();
+        $node = Node::factory()->create(['deployable' => true]);
+
+        $this->actingAs($user)->postJson('/api/client/billing/checkout/create', [
+            'payment_method' => 'not-a-channel',
             'product_id' => $product->id,
             'node_id' => $node->id,
         ])->assertStatus(400);

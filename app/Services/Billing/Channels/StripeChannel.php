@@ -27,7 +27,7 @@ class StripeChannel implements Channel
 
     public function create(CheckoutContext $context, ChannelRoute $route): CheckoutTarget
     {
-        $stripe = new StripeClient((string) $this->channel()->setting('secret'));
+        $stripe = $this->client();
 
         $transaction = $this->paymentService->create(
             $stripe,
@@ -53,7 +53,7 @@ class StripeChannel implements Channel
 
     public function process(string $identifier): Order
     {
-        $stripe = new StripeClient((string) $this->channel()->setting('secret'));
+        $stripe = $this->client();
 
         try {
             $transaction = $stripe->checkout->sessions->retrieve($identifier);
@@ -77,5 +77,18 @@ class StripeChannel implements Channel
         );
 
         return $order->fresh();
+    }
+
+    /**
+     * The Stripe client the channel talks to.
+     *
+     * The client is built from the channel's secret, but a bound client wins, so the
+     * gateway can be swapped out without reaching Stripe over the network.
+     */
+    private function client(): StripeClient
+    {
+        return app()->bound(StripeClient::class)
+            ? app(StripeClient::class)
+            : new StripeClient((string) $this->channel()->setting('secret'));
     }
 }

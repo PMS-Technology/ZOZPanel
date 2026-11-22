@@ -4,8 +4,9 @@
 FROM --platform=$TARGETOS/$TARGETARCH node:22-alpine
 WORKDIR /app
 COPY frontend ./frontend
-RUN corepack enable && corepack prepare --activate \
+RUN corepack enable \
     && cd frontend \
+    && corepack prepare --activate \
     && pnpm install --frozen-lockfile \
     && pnpm build
 

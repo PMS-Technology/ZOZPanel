@@ -46,6 +46,31 @@ jobs:
           coverage: none
       - run: cp .env.ci .env
       - run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
+      # The pages served by the Svelte bundle are rendered through Vite, which reads
+      # the manifest of the built frontend. Without the build there is no manifest
+      # and every page that uses the bundle answers 500.
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.6
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Restore frontend build
+        id: frontend-build
+        uses: actions/cache@v4
+        with:
+          path: public/build-svelte
+          key: ${{ runner.os }}-svelte-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+      - name: Build frontend
+        if: steps.frontend-build.outputs.cache-hit != 'true'
+        run: |
+          cd frontend
+          pnpm install --frozen-lockfile
+          pnpm build
       - run: vendor/bin/php-cs-fixer fix --dry-run --diff
       - run: vendor/bin/phpunit --bootstrap vendor/autoload.php tests/Unit
         env:

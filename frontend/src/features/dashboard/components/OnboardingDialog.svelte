@@ -55,7 +55,7 @@
             <Input
                 id="onboarding-username"
                 type="text"
-                placeholder="everestuser1"
+                placeholder="zozpaneluser1"
                 autocomplete="username"
                 bind:value={form.values.username}
                 error={form.errors.username}

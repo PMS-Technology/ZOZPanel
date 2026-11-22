@@ -109,7 +109,7 @@
         list.push({
             icon: Heart,
             href: 'https://donate.stripe.com/6oE02Zftd9cC34IbIS',
-            title: '赞助 Jexactyl',
+            title: '赞助 ZOZPanel',
             description: '捐赠以支持项目的测试服务器与域名开销。',
             action: '赞助',
         });
@@ -147,7 +147,7 @@
                         {/each}
                     </div>
                     {#if version.data.panel.current.startsWith('v4.0.0-')}
-                        <Alert variant="destructive">你正在使用 Jexactyl v4 测试版，可能存在缺陷。除非不在乎数据丢失，否则请勿用于生产环境。</Alert>
+                        <Alert variant="destructive">你正在使用 ZOZPanel v4 测试版，可能存在缺陷。除非不在乎数据丢失，否则请勿用于生产环境。</Alert>
                     {/if}
                 {/if}
             </CardContent>

@@ -1,12 +1,12 @@
-# Jexactyl Svelte Edition — 阶段一：代码审计报告
+# ZOZPanel Svelte Edition — 阶段一：代码审计报告
 
 > 本文档基于实际仓库内容生成，非推测。统计时间：仓库 `develop` 分支，HEAD `5927ca45f`。
 
 ## 1. 项目身份
 
-这不是上游 Pterodactyl，也不是标准 Jexactyl v3。实际代码库是 **Everest / Jexactyl v4.0.0dev**：
+这不是上游 Pterodactyl，也不是标准 Jexactyl v3。实际代码库是 **ZOZPanel（原 Everest / Jexactyl v4.0.0dev）**：
 
-- `package.json` name: `@jexactyl/jexactyl`, version `4.0.0dev`
+- `package.json` name: `@zozpanel/frontend`, version `1.0.0`
 - PHP 命名空间为 `Everest\`（非 `Pterodactyl\`）
 - 前端运行时实际是 **Preact 10**（通过 `vite.config.ts` 的 alias 把 `react` → `preact/compat`），而非真正的 React 18
 - 已包含大量上游不存在的自研模块：计费、工单、AI、主题、告警、Webhook、管理员角色权限、服务器预设、Passkey
@@ -122,7 +122,7 @@ easy-peasy 全局 store（`state/index.ts`）：`user`、`theme`、`flashes`、`
 - **编辑器**：CodeMirror 6，按语言动态加载（14 个 lang 包）。构建产物 380 kB，已单独分包。
 - **终端**：xterm 5 + fit/search/search-bar/web-links addon，另有自研 `XtermScrollDownHelperAddon.ts`。构建产物 296 kB。
 
-## 9. Jexactyl / Everest 扩展功能清单（不得遗漏）
+## 9. ZOZPanel / Everest 扩展功能清单（不得遗漏）
 
 **计费**：商品分类（Category）、商品（Product）、订单（Order）、发票（Invoice，含 PDF Blade 模板 `views/invoices/pdf.blade.php`）、优惠码（Discount Code）、Stripe 支付、续费（RenewalDates）、服务器升级（Upgrade）、计费异常（Exceptions）、营收图表、配置导入导出、节点计费配置。
 

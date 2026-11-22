@@ -71,7 +71,7 @@ abstract class AbstractAdapter implements ProviderAdapter
         $headers = array_merge(
             [
                 'Accept' => 'application/json',
-                'User-Agent' => 'JexpanelAI/1.0',
+                'User-Agent' => 'ZOZPanelAI/1.0',
             ],
             $this->provider->headers,
             $this->authHeaders(),

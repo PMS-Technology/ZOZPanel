@@ -39,7 +39,7 @@
             mode: 'standard',
             icon: Monitor,
             title: '标准模式',
-            text: '标准模式启用 Jexactyl 的全部常规功能，包括计费系统、工单、用户注册等。',
+            text: '标准模式启用 ZOZPanel 的全部常规功能，包括计费系统、工单、用户注册等。',
         },
         {
             mode: 'personal',
@@ -91,7 +91,7 @@
 <Dialog bind:open={debugHelp} title="如何开启调试模式">
     <ol class="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
         <li>通过 SSH 登录 Web 服务器</li>
-        <li>进入面板目录，例如 <code class="rounded bg-muted px-1 font-mono">/var/www/jexactyl</code></li>
+        <li>进入面板目录，例如 <code class="rounded bg-muted px-1 font-mono">/var/www/zozpanel</code></li>
         <li>打开环境文件 <code class="rounded bg-muted px-1 font-mono">.env</code></li>
         <li>将 <code class="font-mono">APP_ENV</code> 设为 local，<code class="font-mono">APP_DEBUG</code> 设为 true</li>
         <li>关闭时改回 production 与 false</li>

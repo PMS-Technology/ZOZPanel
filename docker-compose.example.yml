@@ -30,13 +30,13 @@ services:
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     networks:
-      - jexpanel
+      - zozpanel
     volumes:
-      - "/srv/jexpanel/database:/var/lib/mysql"
+      - "/srv/zozpanel/database:/var/lib/mysql"
     environment:
       <<: *db-environment
-      MYSQL_DATABASE: "jexpanel_docker"
-      MYSQL_USER: "jexpanel_docker"
+      MYSQL_DATABASE: "zozpanel_docker"
+      MYSQL_USER: "zozpanel_docker"
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -47,7 +47,7 @@ services:
     image: redis:alpine
     restart: always
     networks:
-      - jexpanel
+      - zozpanel
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -55,10 +55,10 @@ services:
       retries: 5
 
   panel:
-    image: ghcr.io/jexactyl/jexactyl:latest
+    image: ghcr.io/pms-technology/zozpanel:latest
     restart: always
     networks:
-      - jexpanel
+      - zozpanel
     ports:
       - "80:80"
       - "443:443"
@@ -68,17 +68,17 @@ services:
       cache:
         condition: service_healthy
     volumes:
-      - "/srv/jexpanel/var/:/app/var/"
-      - "/srv/jexpanel/nginx/:/etc/nginx/http.d/"
-      - "/srv/jexpanel/certs/:/etc/letsencrypt/"
-      - "/srv/jexpanel/logs/:/app/storage/logs"
+      - "/srv/zozpanel/var/:/app/var/"
+      - "/srv/zozpanel/nginx/:/etc/nginx/http.d/"
+      - "/srv/zozpanel/certs/:/etc/letsencrypt/"
+      - "/srv/zozpanel/logs/:/app/storage/logs"
       - "./.github/docker/supervisord.conf:/etc/supervisord.conf"
       - "./.github/docker/entrypoint.sh:/entrypoint.sh"
     environment:
       <<: *panel-environment
       DB_PASSWORD: *db-password
-      DB_USERNAME: "jexpanel_docker"
-      DB_DATABASE: "jexpanel_docker"
+      DB_USERNAME: "zozpanel_docker"
+      DB_DATABASE: "zozpanel_docker"
       APP_ENV: "production"
       APP_ENVIRONMENT_ONLY: "false"
       CACHE_DRIVER: "redis"
@@ -89,7 +89,7 @@ services:
       DB_PORT: "3306"
       HASHIDS_LENGTH: 8
 networks:
-  jexpanel:
+  zozpanel:
     ipam:
       config:
         - subnet: 172.20.0.0/16

@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import { onDestroy } from 'svelte';
     import { Dialog } from 'bits-ui';
     import { cn } from '$lib/utils/cn';
     import { animateIn, animateOut } from '$lib/motion';
@@ -14,6 +15,12 @@
          */
         preventClose?: boolean;
         onOpenChange?: (open: boolean) => void;
+        /**
+         * Called once the dialog has finished closing, i.e. after the closing animation
+         * is over. Work that takes the page behind the dialog down belongs here: the
+         * page must not disappear while the dialog is still on screen.
+         */
+        onClosed?: () => void;
         class?: string;
         children?: Snippet;
         /** Action buttons, rendered right-aligned under the body. */
@@ -26,6 +33,7 @@
         description,
         preventClose = false,
         onOpenChange,
+        onClosed,
         class: className,
         children,
         footer,
@@ -47,6 +55,25 @@
     // bits-ui's `ref` prop has a fallback, so it cannot be bound to an undefined value.
     let overlay = $state<HTMLElement | null>(null);
     let content = $state<HTMLElement | null>(null);
+
+    /**
+     * The panel lives in a portal, outside the markup of this component, and the portal
+     * is torn down with the component. The panel itself is rendered through a snippet,
+     * which the framework does not take with the portal: when the component is
+     * destroyed while the dialog is still open, the panel would stay in the document as
+     * a frozen dialog over the page that replaced it. Every panel this component put
+     * on the page is therefore removed by hand here.
+     */
+    const panels = new Set<HTMLElement>();
+
+    function capture(node: HTMLElement) {
+        panels.add(node);
+    }
+
+    onDestroy(() => {
+        for (const node of panels) node.remove();
+        panels.clear();
+    });
 
     /** Invalidates a running animation when the dialog is reopened. */
     let token = 0;
@@ -91,6 +118,7 @@
             shown = false;
             closing = false;
             cycle += 1;
+            onClosed?.();
         });
     });
 </script>
@@ -104,7 +132,9 @@
                     <div
                         {...props}
                         bind:this={content}
-                        hidden={!shown}                        class={cn(
+                        use:capture
+                        hidden={!shown}
+                        class={cn(
                             'fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto',
                             'rounded-lg border border-border bg-popover p-6 text-popover-foreground shadow-lg',
                             className,

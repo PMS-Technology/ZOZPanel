@@ -34,6 +34,11 @@
     let deleteOpen = $state(false);
     const remove = async () => {
         await deleteEgg(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminNestKeys.egg(id) });
         await queryClient.invalidateQueries({ queryKey: adminNestKeys.eggs(nestId) });
         navigate(`/admin/nests/${nestId}`);
@@ -68,7 +73,7 @@
     <Spinner centered />
 {:else}
     {@const e = egg.data}
-    <ConfirmDialog bind:open={deleteOpen} title="删除 Egg" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除 Egg" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除 <strong>{e.name}</strong> 吗？它的变量会一起删除。还有服务器在用这个 Egg 时不能删除。
     </ConfirmDialog>
 

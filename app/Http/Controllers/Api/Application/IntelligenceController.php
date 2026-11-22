@@ -70,21 +70,21 @@ class IntelligenceController extends ApplicationApiController
 
         Activity::event('admin:ai:update')
             ->property('settings', $request->except(['key', 'headers']))
-            ->description('JexpanelAI settings were updated')
+            ->description('ZOZPanelAI settings were updated')
             ->log();
 
         return $this->returnNoContent();
     }
 
     /**
-     * Send a query to JexpanelAI. Kept as the legacy text-in/text-out endpoint.
+     * Send a query to ZOZPanelAI. Kept as the legacy text-in/text-out endpoint.
      *
      * @throws \Throwable
      */
     public function query(Intelligence\QueryRequest $request): JsonResponse|Response
     {
         if (!config('modules.ai.enabled')) {
-            return response()->json(['error' => 'The JexpanelAI module is not enabled.'], 400);
+            return response()->json(['error' => 'The ZOZPanelAI module is not enabled.'], 400);
         }
 
         try {
@@ -134,7 +134,7 @@ class IntelligenceController extends ApplicationApiController
     public function chat(Intelligence\ChatRequest $request): JsonResponse|StreamedResponse|Response
     {
         if (!config('modules.ai.enabled')) {
-            return response()->json(['error' => 'The JexpanelAI module is not enabled.'], 400);
+            return response()->json(['error' => 'The ZOZPanelAI module is not enabled.'], 400);
         }
 
         $payload = $request->validated();

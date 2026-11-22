@@ -214,5 +214,5 @@
 </div>
 
 <ConfirmDialog bind:open={resetOpen} title="确认恢复默认主题" confirmLabel="恢复默认" onConfirm={reset}>
-    <p>此操作会立即清除所有自定义配色，恢复 Jexactyl 的默认外观，且无法撤销。</p>
+    <p>此操作会立即清除所有自定义配色，恢复 ZOZPanel 的默认外观，且无法撤销。</p>
 </ConfirmDialog>

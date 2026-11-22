@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <title>{{ config('app.name', 'Everest') }}</title>
+        <title>{{ config('app.name', 'ZOZPanel') }}</title>
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -55,7 +55,7 @@
         <script>
             (function () {
                 try {
-                    var stored = localStorage.getItem('jexactyl:color-scheme');
+                    var stored = localStorage.getItem('zozpanel:color-scheme');
                     var dark = stored === 'dark' ||
                         ((!stored || stored === 'system') &&
                             window.matchMedia('(prefers-color-scheme: dark)').matches);

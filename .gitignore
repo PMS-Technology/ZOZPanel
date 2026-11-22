@@ -9,6 +9,8 @@ storage/framework/*
 /.idea
 /nbproject
 /.direnv
+.playwright-mcp/*
+new-api-main/*
 
 node_modules
 *.log
@@ -31,6 +33,8 @@ misc
 coverage.xml
 resources/lang/locales.js
 .phpunit.result.cache
+vercel_design.md
+llms.txt
 
 /public/build
 /public/hot
@@ -41,3 +45,9 @@ resources/lang/locales.js
 result
 
 .pnpm-store
+
+# Local database exports and backups — never commit these
+*.sql.zip
+*.sql.gz
+*-mysql_data-*.zip
+*.sql.bak

@@ -168,7 +168,7 @@ export interface NodeUtilization {
     disk: { total: number; used: number };
 }
 
-/** Only JexpanelSuperDaemon ("supercharged") nodes answer this. Bytes. */
+/** Only ZOZPanelSuperDaemon ("supercharged") nodes answer this. Bytes. */
 export async function getNodeUtilization(id: number): Promise<NodeUtilization> {
     const { data } = await http.get(`/api/application/nodes/${id}/utilization`);
 

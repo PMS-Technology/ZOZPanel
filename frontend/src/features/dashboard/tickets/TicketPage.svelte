@@ -47,6 +47,11 @@
 
     async function confirmDelete() {
         await deleteTicket(id!);
+        // The page is left once the dialog has closed; see `leave`.
+    }
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    async function leave() {
         queryClient.removeQueries({ queryKey: ticketKeys.detail(id!) });
         await queryClient.invalidateQueries({ queryKey: ticketKeys.all });
         navigate('/account/tickets');
@@ -154,7 +159,7 @@
         {/if}
     </div>
 
-    <ConfirmDialog bind:open={deleteOpen} title="删除工单" confirmLabel="删除工单" onConfirm={confirmDelete}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除工单" confirmLabel="删除工单" onConfirm={confirmDelete} onClosed={leave}>
         <p>确定要删除这个工单及其所有消息吗？此操作无法撤销。</p>
     </ConfirmDialog>
 {/if}

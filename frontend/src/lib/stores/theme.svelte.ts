@@ -3,7 +3,7 @@ import { DEFAULT_BRAND, normalizeBrand } from '$lib/theme/presets';
 
 export type ColorScheme = 'light' | 'dark' | 'system';
 
-const STORAGE_KEY = 'jexactyl:color-scheme';
+const STORAGE_KEY = 'zozpanel:color-scheme';
 
 /**
  * Light/dark handling and the brand colour.

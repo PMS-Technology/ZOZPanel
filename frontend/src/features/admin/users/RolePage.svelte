@@ -76,6 +76,11 @@
     let deleteOpen = $state(false);
     const remove = async () => {
         await deleteRole(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminUserKeys.role(id) });
         await queryClient.invalidateQueries({ queryKey: adminUserKeys.roles });
         await queryClient.invalidateQueries({ queryKey: adminUserKeys.users });
@@ -91,7 +96,7 @@
     <Spinner centered />
 {:else}
     {@const r = role.data}
-    <ConfirmDialog bind:open={deleteOpen} title="删除角色" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除角色" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除角色 <strong>{r.name}</strong> 吗？持有这个角色的用户会失去全部管理权限（同时取消 Root），需要重新分配角色才能恢复。
     </ConfirmDialog>
 

@@ -84,6 +84,11 @@
     const hasServers = $derived((serverCount.data?.pagination.total ?? 0) > 0);
     const remove = async () => {
         await deleteNode(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminNodeKeys.node(id) });
         await queryClient.invalidateQueries({ queryKey: adminNodeKeys.all });
         navigate('/admin/nodes');
@@ -113,7 +118,7 @@
     <Spinner centered />
 {:else}
     {@const n = node.data}
-    <ConfirmDialog bind:open={deleteOpen} title="删除节点" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除节点" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除节点 <strong>{n.name}</strong> 吗？节点上的分配会一并删除。
     </ConfirmDialog>
 
@@ -167,7 +172,7 @@
                             <dt class="text-muted-foreground">架构</dt><dd class="font-mono text-xs">{info.data.system.arch ?? '—'}</dd>
                             <dt class="text-muted-foreground">CPU 线程</dt><dd class="font-mono text-xs">{info.data.system.cpus ?? '—'}</dd>
                             <dt class="text-muted-foreground">守护进程</dt>
-                            <dd class="text-xs">{info.data.system.supercharged ? 'JexpanelSuperDaemon' : 'Pterodactyl Wings'}</dd>
+                            <dd class="text-xs">{info.data.system.supercharged ? 'ZOZPanelSuperDaemon' : 'Pterodactyl Wings'}</dd>
                         </dl>
                     {/if}
                 </CardContent>

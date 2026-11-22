@@ -50,11 +50,17 @@
         isDeleting = true;
         try {
             await deleteSchedule(store.server.uuid, scheduleId);
-            void queryClient.invalidateQueries({ queryKey: ['server', store.server.id, 'schedules'] });
-            navigate(`/server/${store.server.id}/schedules`);
+            // The page is left once the dialog has closed; see `leave`.
         } finally {
             isDeleting = false;
         }
+    }
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    async function leave() {
+        if (!store.server) return;
+        void queryClient.invalidateQueries({ queryKey: ['server', store.server.id, 'schedules'] });
+        navigate(`/server/${store.server.id}/schedules`);
     }
 
     async function handleRun() {
@@ -187,6 +193,7 @@
             title="确认删除"
             confirmLabel="删除"
             onConfirm={handleDelete}
+            onClosed={leave}
             disabled={isDeleting}
         >
             此操作无法撤销。所有任务将被移除，任何正在运行的进程都将被终止。

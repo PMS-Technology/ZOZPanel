@@ -22,12 +22,13 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          cd frontend
+          pnpm install --frozen-lockfile
 
       - name: Build
         run: |
           cd frontend
-          pnpm install --frozen-lockfile
           pnpm build
 
       - name: create release branch and bump version
@@ -35,8 +36,8 @@ jobs:
           VERSION: ${{ github.ref_name }}
         run: |
           BRANCH=release/${{ env.VERSION }}
-          git config --local user.email 'ci@jexpanel.com'
-          git config --local user.name 'Jexpanel'
+          git config --local user.email 'ci@zozpanel.com'
+          git config --local user.name 'ZOZPanel'
           git checkout -b "$BRANCH"
           git push -u origin "$BRANCH"
           sed -i "s/'canary'/'${VERSION:1}'/" config/app.php
@@ -53,6 +54,6 @@ jobs:
         with:
           draft: true
           prerelease: ${{ contains(github.ref_name, 'rc') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
-          body_path: ./RELEASE_CHANGELOG
+          generate_release_notes: true
           files: |
             panel.tar.gz

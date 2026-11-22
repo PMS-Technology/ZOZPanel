@@ -1,8 +1,8 @@
-# Jexpanel (formerly Jexactyl)
+# ZOZPanel
 
-[![Latest Release](https://img.shields.io/github/v/release/Jexactyl/Jexactyl?style=for-the-badge)](https://github.com/Jexactyl/Jexactyl/releases)
-[![Stars](https://img.shields.io/github/stars/Jexactyl/Jexactyl?style=for-the-badge)](https://github.com/Jexactyl/Jexactyl/stargazers)
-[![Forks](https://img.shields.io/github/forks/Jexactyl/Jexactyl?style=for-the-badge)](https://github.com/Jexactyl/Jexactyl/network)
+[![Latest Release](https://img.shields.io/github/v/release/PMS-Technology/ZOZPanel?style=for-the-badge)](https://github.com/PMS-Technology/ZOZPanel/releases)
+[![Stars](https://img.shields.io/github/stars/PMS-Technology/ZOZPanel?style=for-the-badge)](https://github.com/PMS-Technology/ZOZPanel/stargazers)
+[![Forks](https://img.shields.io/github/forks/PMS-Technology/ZOZPanel?style=for-the-badge)](https://github.com/PMS-Technology/ZOZPanel/network)
 
 **Game panel & billing system — fast, secure, and customizable**
 
@@ -10,7 +10,7 @@
 
 ## Overview
 
-Jexpanel is a modern, high-performance **game server management panel** built on **Pterodactyl Panel**, offering enhanced security, advanced customization, and integrated billing—supporting Stripe and PayPal—right out of the box.
+ZOZ Panel is a modern, high-performance **game server management panel** built on **Pterodactyl Panel**, offering enhanced security, advanced customization, and integrated billing—supporting Stripe and PayPal—right out of the box.
 
 ## Features
 
@@ -22,9 +22,9 @@ Jexpanel is a modern, high-performance **game server management panel** built on
 
 ## Useful Links
 
-- Website & Documentation: [jexpanel.com](https://jexpanel.com)  
-- GitHub Repository: [Jexactyl/Jexactyl](https://github.com/Jexactyl/Jexactyl)
-- Discord: [discord.com/jexpanel](https://discord.gg/qttGR4Z5Pk)
+- Website & Documentation: [zozpanel.com](https://zozpanel.com)  
+- GitHub Repository: [PMS-Technology/ZOZPanel](https://github.com/PMS-Technology/ZOZPanel)
+- Discord: [discord.com/zozpanel](https://discord.gg/qttGR4Z5Pk)
 
 ## Contribution
 

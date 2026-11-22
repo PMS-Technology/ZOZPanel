@@ -20,7 +20,7 @@
     import PageHeader from '$lib/components/PageHeader.svelte';
 
     /**
-     * JexpanelAI settings and console. The provider picker drives a config-driven
+     * ZOZPanelAI settings and console. The provider picker drives a config-driven
      * adapter layer on the backend, so switching formats does not change this page's
      * request shape; only the selected provider/model is stored.
      */
@@ -221,11 +221,11 @@
 </script>
 
 <svelte:head>
-    <title>JexpanelAI | {app.settings?.name ?? 'Panel'}</title>
+    <title>ZOZPanelAI | {app.settings?.name ?? 'Panel'}</title>
 </svelte:head>
 
 <div class="mx-auto max-w-7xl p-6 lg:p-8">
-    <PageHeader title="JexpanelAI" description="用 AI 帮助用户理解错误、提供即时支持，并协助管理员管理面板。" />
+    <PageHeader title="ZOZPanelAI" description="用 AI 帮助用户理解错误、提供即时支持，并协助管理员管理面板。" />
 
     {#if notice}<Alert variant={notice.variant} class="mb-4">{notice.text}</Alert>{/if}
 
@@ -233,16 +233,16 @@
         <Card class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center">
             <WandSparkles class="size-8 shrink-0 text-primary" />
             <p class="flex-1 text-sm text-muted-foreground">
-                JexpanelAI 通过统一适配层接入 Anthropic、OpenAI、Gemini、OpenRouter、Ollama 等 17 种接口格式，
+                ZOZPanelAI 通过统一适配层接入 Anthropic、OpenAI、Gemini、OpenRouter、Ollama 等 17 种接口格式，
                 可用于解释错误、提供即时支持，也能帮助管理员更好地掌控面板。
             </p>
             {#if canUpdate}
-                <Button loading={busy === 'toggle'} onclick={() => setEnabled(true)}>启用 JexpanelAI</Button>
+                <Button loading={busy === 'toggle'} onclick={() => setEnabled(true)}>启用 ZOZPanelAI</Button>
             {/if}
         </Card>
     {:else if needsKey}
         <Card class="max-w-2xl">
-            <CardHeader><CardTitle class="flex items-center gap-2"><KeyRound class="size-4" />配置 JexpanelAI</CardTitle></CardHeader>
+            <CardHeader><CardTitle class="flex items-center gap-2"><KeyRound class="size-4" />配置 ZOZPanelAI</CardTitle></CardHeader>
             <CardContent>
                 <form class="space-y-4 text-sm" onsubmit={saveKey}>
                     <div class="space-y-1.5">
@@ -319,8 +319,8 @@
                             <ChevronRight class="size-4 shrink-0 text-zinc-400" />
                             <input
                                 bind:value={prompt}
-                                aria-label="向 JexpanelAI 提问"
-                                placeholder="向 JexpanelAI 提问，按回车发送"
+                                aria-label="向 ZOZPanelAI 提问"
+                                placeholder="向 ZOZPanelAI 提问，按回车发送"
                                 disabled={!app.can('ai.read') || asking}
                                 class="h-9 flex-1 bg-transparent font-mono text-sm placeholder:text-zinc-500 focus:outline-none"
                             />
@@ -328,14 +328,14 @@
                     </div>
                 </div>
                 <div class="space-y-4 lg:col-span-2">
-                    <Alert variant="warning">JexpanelAI 的回答可能不准确或过时，请谨慎使用。</Alert>
+                    <Alert variant="warning">ZOZPanelAI 的回答可能不准确或过时，请谨慎使用。</Alert>
                     <Alert>请确认所选 Provider 的配额与限流策略。上游错误会保留原始状态码和响应体，便于排查。</Alert>
                     {#if canUpdate}
                         <Card class="space-y-3 p-4 text-sm">
-                            <p class="font-semibold">停用 JexpanelAI</p>
+                            <p class="font-semibold">停用 ZOZPanelAI</p>
                             <p class="text-muted-foreground">停用后用户和管理员都无法使用 AI。Provider 配置与密钥会保留在数据库中。</p>
                             <div class="text-right">
-                                <Button variant="destructive" loading={busy === 'toggle'} onclick={() => setEnabled(false)}>停用 JexpanelAI</Button>
+                                <Button variant="destructive" loading={busy === 'toggle'} onclick={() => setEnabled(false)}>停用 ZOZPanelAI</Button>
                             </div>
                         </Card>
                     {/if}
@@ -444,7 +444,7 @@
                                 允许普通用户使用 AI
                                 <Switch bind:checked={userAccess} aria-label="允许普通用户使用 AI" disabled={!canUpdate} />
                             </label>
-                            <p class="text-xs text-muted-foreground">开启后，普通用户也能和管理员一样使用 JexpanelAI。</p>
+                            <p class="text-xs text-muted-foreground">开启后，普通用户也能和管理员一样使用 ZOZPanelAI。</p>
                         </CardContent>
                     </Card>
 
@@ -482,7 +482,7 @@
                                 bind:value={systemPrompt}
                                 disabled={!canUpdate}
                                 rows="3"
-                                placeholder="You are JexpanelAI…"
+                                placeholder="You are ZOZPanelAI…"
                                 class="w-full rounded-md border border-input bg-background px-3 py-2 text-xs focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50"
                             ></textarea>
                         </label>

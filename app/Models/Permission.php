@@ -214,7 +214,7 @@ class Permission extends Model
         ],
 
         'ai' => [
-            'description' => 'Permissions that control a user\'s access to the JexpanelAI assistant for this server.',
+            'description' => 'Permissions that control a user\'s access to the ZOZPanelAI assistant for this server.',
             'keys' => [
                 'assistant' => 'Allows a user to ask the AI assistant about this server. Changing anything the assistant proposes still requires the permissions for that action.',
             ],

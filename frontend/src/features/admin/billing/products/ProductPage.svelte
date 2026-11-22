@@ -135,6 +135,11 @@
 
     const remove = async () => {
         await deleteProduct(categoryId, productId!);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminBillingKeys.product(productId!) });
         await queryClient.invalidateQueries({ queryKey: adminBillingKeys.products(categoryId) });
         navigate(`/admin/billing/categories/${categoryId}`);
@@ -156,7 +161,7 @@
     <Spinner centered />
 {:else}
     {#if productId !== null}
-        <ConfirmDialog bind:open={deleteOpen} title="删除商品" confirmLabel="删除" disabled={confirmName !== product.data?.name} onConfirm={remove}>
+        <ConfirmDialog bind:open={deleteOpen} title="删除商品" confirmLabel="删除" disabled={confirmName !== product.data?.name} onConfirm={remove} onClosed={leave}>
             <p>删除后用户无法再购买这个商品。请输入商品名称 <code class="rounded bg-muted px-1 font-mono">{product.data?.name}</code> 确认：</p>
             <Input bind:value={confirmName} aria-label="输入商品名称确认删除" autocomplete="off" />
         </ConfirmDialog>

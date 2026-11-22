@@ -24,7 +24,7 @@ return [
     /*
      * Type a message which the alert will display.
      */
-    'content' => env('ALERT_CONTENT', 'This is a JexpanelAlert.'),
+    'content' => env('ALERT_CONTENT', 'This is a ZOZPanelAlert.'),
 
     /*
      * This sets the UUID of the alert. You should not edit this

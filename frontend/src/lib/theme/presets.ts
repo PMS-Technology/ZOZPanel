@@ -13,7 +13,7 @@
  * colour being held away from the status colours.
  */
 export const BRAND_PRESETS = [
-    { hex: '#16a34a', name: 'Jexactyl 绿' },
+    { hex: '#16a34a', name: 'ZOZPanel 绿' },
     { hex: '#12aaaa', name: '青绿' },
     { hex: '#ff0000', name: '砖红' },
     { hex: '#9D00FF', name: '鸢尾紫' },

@@ -50,7 +50,7 @@
         selectionBackground: '#FAF089',
     };
 
-    const TERMINAL_PRELUDE = '\n\u001b[1m\u001b[33mEverest Container: \u001b[0m';
+    const TERMINAL_PRELUDE = '\n\u001b[1m\u001b[33mZOZPanel Container: \u001b[0m';
 
     let container: HTMLDivElement;
 

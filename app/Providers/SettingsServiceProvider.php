@@ -12,7 +12,7 @@ use Illuminate\Contracts\Config\Repository as ConfigRepository;
 class SettingsServiceProvider extends ServiceProvider
 {
     protected array $keys = [
-        // Jexactyl-specific keys
+        // ZOZPanel-specific keys
         'app:name', 'app:logo', 'app:mode', 'app:setup', 'app:locale',
         'app:speed_dial', 'app:indicators', 'app:auto_update',
         'captcha:enabled', 'captcha:provider',

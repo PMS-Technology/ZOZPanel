@@ -23,7 +23,7 @@
 
     const modules = $derived(app.flags?.auth.modules);
     const registration = $derived(Boolean(app.flags?.auth.registration.enabled));
-    const name = $derived(app.settings?.name || 'Jexactyl');
+    const name = $derived(app.settings?.name || 'ZOZPanel');
 
     const form = new Form({
         schema: z.object({

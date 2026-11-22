@@ -32,6 +32,11 @@
 
     const remove = async () => {
         await deletePreset(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminServerKeys.preset(id) });
         await queryClient.invalidateQueries({ queryKey: adminServerKeys.presets });
         navigate('/admin/servers/presets');
@@ -55,7 +60,7 @@
             await queryClient.invalidateQueries({ queryKey: [...adminServerKeys.presets, 'list'] });
         }}
     />
-    <ConfirmDialog bind:open={deleteOpen} title="删除预设" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除预设" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除预设 <strong>{p.name}</strong> 吗？已经用它创建的服务器不受影响。
     </ConfirmDialog>
 

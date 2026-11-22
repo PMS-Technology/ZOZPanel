@@ -39,6 +39,11 @@
 
     const remove = async () => {
         await deleteNest(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminNestKeys.nest(id) });
         await queryClient.invalidateQueries({ queryKey: adminNestKeys.all });
         navigate('/admin/nests');
@@ -62,7 +67,7 @@
             await queryClient.invalidateQueries({ queryKey: [...adminNestKeys.all, 'list'] });
         }}
     />
-    <ConfirmDialog bind:open={deleteOpen} title="删除 Nest" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除 Nest" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除 <strong>{n.name}</strong> 吗？它下面的 Egg 会一起删除。还有服务器在用这个 Nest 时不能删除。
     </ConfirmDialog>
     <ImportEggDialog bind:open={importOpen} nestId={id} />

@@ -36,7 +36,7 @@ return [
     'max_tokens' => env('AI_MAX_TOKENS', 1024),
     'temperature' => env('AI_TEMPERATURE', 0.7),
 
-    'system_prompt' => env('AI_SYSTEM_PROMPT', 'You are JexpanelAI, the assistant built into the Jexpanel game server panel. Answer concisely and help users understand server errors and panel features.'),
+    'system_prompt' => env('AI_SYSTEM_PROMPT', 'You are ZOZPanelAI, the assistant built into the ZOZPanel game server panel. Answer concisely and help users understand server errors and panel features.'),
 
     /*
      * Should clients/users be allowed

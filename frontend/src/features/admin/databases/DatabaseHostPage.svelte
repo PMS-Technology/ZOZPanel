@@ -32,6 +32,11 @@
 
     const remove = async () => {
         await deleteDatabaseHost(id!);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminDatabaseKeys.host(id!) });
         await queryClient.invalidateQueries({ queryKey: adminDatabaseKeys.all });
         navigate('/admin/databases');
@@ -52,7 +57,7 @@
     {:else if !host.data}
         <Spinner centered />
     {:else}
-        <ConfirmDialog bind:open={deleteOpen} title="删除数据库主机" confirmLabel="删除" onConfirm={remove}>
+        <ConfirmDialog bind:open={deleteOpen} title="删除数据库主机" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
             确定删除数据库主机 <strong>{host.data.name}</strong> 吗？主机上的数据库本身不会被删除，但面板不再管理它们。
         </ConfirmDialog>
 

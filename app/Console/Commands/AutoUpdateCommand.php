@@ -11,20 +11,20 @@ use Everest\Services\Helpers\SoftwareVersionService;
 
 class AutoUpdateCommand extends Command
 {
-    protected const DEFAULT_URL = 'https://github.com/jexactyl/jexactyl/releases/%s/panel.tar.gz';
+    protected const DEFAULT_URL = 'https://github.com/PMS-Technology/ZOZPanel/releases/%s/panel.tar.gz';
 
     protected $signature = 'p:auto-update
         {--user= : The user that PHP runs under. All files will be owned by this user.}
         {--group= : The group that PHP runs under. All files will be owned by this group.}
         {--url= : The specific archive to download.}
-        {--release= : A specific Jexpanel version to download from GitHub. Leave blank to use latest.}
+        {--release= : A specific ZOZPanel version to download from GitHub. Leave blank to use latest.}
         {--force : Perform the upgrade even if the current version is already the latest.}';
 
-    protected $description = 'Downloads a new archive for Jexpanel from GitHub and then executes the normal upgrade commands.';
+    protected $description = 'Downloads a new archive for ZOZPanel from GitHub and then executes the normal upgrade commands.';
 
     /**
      * Executes an upgrade command which will run through all of our standard
-     * commands for Jexpanel and enable users to basically just download
+     * commands for ZOZPanel and enable users to basically just download
      * the archive and execute this and be done.
      *
      * @throws \Exception
@@ -35,7 +35,7 @@ class AutoUpdateCommand extends Command
         $versionService = $this->getLaravel()->make(SoftwareVersionService::class);
 
         if (!$this->option('force') && !$this->option('url') && !$this->option('release') && $versionService->isLatestPanel()) {
-            $this->info("You are already running the latest version of Jexpanel ({$versionService->getCurrentVersion()}). Pass --force to update anyway.");
+            $this->info("You are already running the latest version of ZOZPanel ({$versionService->getCurrentVersion()}). Pass --force to update anyway.");
 
             return self::SUCCESS;
         }

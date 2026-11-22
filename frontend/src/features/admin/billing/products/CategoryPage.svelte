@@ -133,6 +133,11 @@
 
     const remove = async () => {
         await deleteCategory(id!);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminBillingKeys.category(id!) });
         await queryClient.invalidateQueries({ queryKey: adminBillingKeys.categories });
         navigate('/admin/billing/categories');
@@ -151,6 +156,7 @@
             confirmLabel="删除分类和商品"
             disabled={confirmName !== category.data?.name}
             onConfirm={remove}
+            onClosed={leave}
         >
             <p>此分类下的所有商品会被一并永久删除。请输入分类名称 <code class="rounded bg-muted px-1 font-mono">{category.data?.name}</code> 确认：</p>
             <Input bind:value={confirmName} aria-label="输入分类名称确认删除" autocomplete="off" />

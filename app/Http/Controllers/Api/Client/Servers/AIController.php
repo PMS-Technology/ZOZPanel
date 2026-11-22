@@ -25,7 +25,7 @@ class AIController extends ClientApiController
     public function index(QueryAIRequest $request, Server $server): JsonResponse|Response
     {
         if (!config('modules.ai.enabled')) {
-            return response()->json(['error' => 'The JexpanelAI module is not enabled.'], 400);
+            return response()->json(['error' => 'The ZOZPanelAI module is not enabled.'], 400);
         }
 
         $system = sprintf(

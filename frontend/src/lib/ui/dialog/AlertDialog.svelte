@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import { onDestroy } from 'svelte';
     import { AlertDialog as AlertDialogPrimitive } from 'bits-ui';
     import { cn } from '$lib/utils/cn';
     import { animateIn, animateOut } from '$lib/motion';
@@ -66,6 +67,25 @@
     let content = $state<HTMLElement | null>(null);
 
     let busy = $state(false);
+
+    /**
+     * The panel lives in a portal, outside the markup of this component, and the portal
+     * is torn down with the component. The panel itself is rendered through a snippet,
+     * which the framework does not take with the portal: when the component is
+     * destroyed while the dialog is still open, the panel would stay in the document as
+     * a frozen dialog over the page that replaced it. Every panel this component put
+     * on the page is therefore removed by hand here.
+     */
+    const panels = new Set<HTMLElement>();
+
+    function capture(node: HTMLElement) {
+        panels.add(node);
+    }
+
+    onDestroy(() => {
+        for (const node of panels) node.remove();
+        panels.clear();
+    });
 
     /** Invalidates a running animation when the dialog is reopened. */
     let token = 0;
@@ -143,6 +163,7 @@
                     <div
                         {...props}
                         bind:this={content}
+                        use:capture
                         hidden={!shown}
                         class={cn(
                             'fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto',

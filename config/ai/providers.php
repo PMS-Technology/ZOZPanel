@@ -179,7 +179,7 @@ return [
         ],
         'headers' => [
             'HTTP-Referer' => env('AI_OPENROUTER_SITE_URL', env('APP_URL', '')),
-            'X-Title' => env('AI_OPENROUTER_SITE_NAME', 'Jexpanel'),
+            'X-Title' => env('AI_OPENROUTER_SITE_NAME', 'ZOZPanel'),
         ],
         'paths' => [
             'chat' => '/chat/completions',

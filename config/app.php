@@ -17,7 +17,7 @@ return [
     |--------------------------------------------------------------------------
     | Automatic Updates
     |--------------------------------------------------------------------------
-    | Allow Jexpanelto update itself in the background in line with the latest
+    | Allow ZOZPanel to update itself in the background in line with the latest
     | GitHub software release. This feature is off by default.
     */
     'auto_update' => false,
@@ -27,7 +27,7 @@ return [
     | Admin Indicators
     |--------------------------------------------------------------------------
     | Allow the panel to display small indicators in the top-right of the UI
-    | when certain Jexpanelfeatures are toggled to 'on'.
+    | when certain ZOZPanel features are toggled to 'on'.
     */
     'indicators' => false,
 
@@ -35,7 +35,7 @@ return [
     |--------------------------------------------------------------------------
     | Is Setup
     |--------------------------------------------------------------------------
-    | This variable toggles whether Jexpanelhas been configured and is ready
+    | This variable toggles whether ZOZPanel has been configured and is ready
     | for use. This should ideally be done via the UI.
     */
     'auto_update' => false,
@@ -83,7 +83,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Everest'),
+    'name' => env('APP_NAME', 'ZOZPanel'),
 
     /*
     |--------------------------------------------------------------------------

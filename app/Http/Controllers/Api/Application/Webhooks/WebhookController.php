@@ -82,7 +82,7 @@ class WebhookController extends ApplicationApiController
 
         Activity::event('admin:webhooks:update')
             ->property('settings', $request->all())
-            ->description('Jexpanelwebhook settings were updated')
+            ->description('ZOZPanel webhook settings were updated')
             ->log();
 
         return $this->returnNoContent();

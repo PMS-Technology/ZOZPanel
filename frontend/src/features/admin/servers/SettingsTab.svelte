@@ -99,6 +99,11 @@
     let force = $state(false);
     const remove_ = async () => {
         await deleteServer(server.id, force);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /** Takes the page down after the confirmation dialog has closed. */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminServerKeys.server(server.id) });
         await queryClient.invalidateQueries({ queryKey: adminServerKeys.all });
         navigate('/admin/servers');
@@ -112,7 +117,7 @@
     );
 </script>
 
-<ConfirmDialog bind:open={deleteOpen} title="删除服务器" confirmLabel={force ? '强制删除' : '删除'} onConfirm={remove_}>
+<ConfirmDialog bind:open={deleteOpen} title="删除服务器" confirmLabel={force ? '强制删除' : '删除'} onConfirm={remove_} onClosed={leave}>
     <p>确定删除服务器 <strong>{server.name}</strong> 吗？服务器文件和它的数据库会一起删除。</p>
     <label class="flex items-start gap-2 rounded-md bg-muted/50 p-3">
         <Checkbox bind:checked={force} class="mt-0.5" />

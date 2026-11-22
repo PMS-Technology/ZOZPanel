@@ -6,7 +6,7 @@
 
     /** The centred card every auth page sits in, ported from LoginFormContainer.tsx. */
     let { title, description, children }: { title: string; description?: string; children: Snippet } = $props();
-    const name = $derived(app.settings?.name || 'Jexactyl');
+    const name = $derived(app.settings?.name || 'ZOZPanel');
 </script>
 
 <svelte:head>

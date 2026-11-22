@@ -60,6 +60,15 @@
 
     const remove = async () => {
         await deleteUser(id);
+        // The page is left once the dialog has closed; see `leave`.
+    };
+
+    /**
+     * Takes the page down after the confirmation dialog has closed. Doing it here
+     * rather than in `remove` keeps the dialog on screen while it closes instead of
+     * leaving it behind over the page that replaces this one.
+     */
+    const leave = async () => {
         queryClient.removeQueries({ queryKey: adminUserKeys.user(id) });
         await queryClient.invalidateQueries({ queryKey: adminUserKeys.users });
         navigate('/admin/users');
@@ -83,7 +92,7 @@
     >
         {u.state === 'suspended' ? '恢复后，该用户可以重新登录和使用服务器。' : '暂停后，该用户会立即无法登录面板。'}确定继续吗？
     </ConfirmDialog>
-    <ConfirmDialog bind:open={deleteOpen} title="删除用户" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="删除用户" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         确定删除用户 <strong>{u.username}</strong> 吗？对方将无法再访问面板。名下还有服务器时无法删除。
     </ConfirmDialog>
 

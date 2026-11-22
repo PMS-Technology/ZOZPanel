@@ -302,7 +302,7 @@
     <div class="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
         {#if !enabled}
             <Alert variant="warning" title="AI 模块未启用">
-                管理员还没有启用 JexpanelAI 模块，助手暂时无法使用。
+                管理员还没有启用 ZOZPanelAI 模块，助手暂时无法使用。
             </Alert>
         {:else if !allowed}
             <Alert variant="warning" title="没有使用权限">

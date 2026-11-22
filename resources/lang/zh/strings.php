@@ -68,5 +68,5 @@ return [
     'enable' => '启用',
     'disable' => '禁用',
     'save' => '保存',
-    'copyright' => '&copy; 2015 - :year Pterodactyl Software',
+    'copyright' => '&copy; 2015 - :year ZOZPanel Software',
 ];

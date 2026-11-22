@@ -30,7 +30,7 @@ class WebhookEventService
                     'url' => config('app.url') . '/admin',
                     'timestamp' => now()->toIso8601String(),
                     'footer' => [
-                        'text' => 'Provided by Jexpanel v4',
+                        'text' => 'Provided by ZOZPanel v4',
                         'icon_url' => 'https://avatars.githubusercontent.com/u/91636558',
                     ],
                     'author' => [

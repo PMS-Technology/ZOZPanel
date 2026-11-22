@@ -88,8 +88,15 @@
 
     async function remove() {
         await deleteAdminTicket(id);
-        // Drop this ticket's queries rather than invalidating them: they are still
-        // mounted, and a refetch of a deleted ticket only produces 404s.
+        // The page is left once the dialog has closed; see `leave`.
+    }
+
+    /**
+     * Takes the page down after the confirmation dialog has closed. Drop this ticket's
+     * queries rather than invalidating them: they are still mounted, and a refetch of
+     * a deleted ticket only produces 404s.
+     */
+    async function leave() {
         queryClient.removeQueries({ queryKey: ['admin', 'tickets', 'detail', id] });
         queryClient.removeQueries({ queryKey: ['admin', 'tickets', 'messages', id] });
         navigate('/admin/tickets');
@@ -253,7 +260,7 @@
         </section>
     </div>
 
-    <ConfirmDialog bind:open={deleteOpen} title="确认删除工单" confirmLabel="删除" onConfirm={remove}>
+    <ConfirmDialog bind:open={deleteOpen} title="确认删除工单" confirmLabel="删除" onConfirm={remove} onClosed={leave}>
         <p>确定删除工单 <strong>{t.title}</strong> 及其全部消息吗？此操作无法撤销。</p>
     </ConfirmDialog>
 {/if}

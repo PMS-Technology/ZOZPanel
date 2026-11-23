@@ -40,6 +40,7 @@ class ApiController extends ApplicationApiController
             ->where('key_type', 2)
             ->allowedFilters(...['id', 'identifier', 'last_used_at'])
             ->allowedSorts(...['id', 'identifier', 'last_used_at'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($apiKeys, ApiKeyTransformer::class);

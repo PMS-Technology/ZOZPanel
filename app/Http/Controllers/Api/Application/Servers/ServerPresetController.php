@@ -38,6 +38,7 @@ class ServerPresetController extends ApplicationApiController
         $presets = QueryBuilder::for(ServerPreset::query())
             ->allowedFilters(...['id', 'uuid', 'name'])
             ->allowedSorts(...['id', 'uuid', 'name', 'cpu', 'memory', 'disk', 'nest_id', 'egg_id'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($presets, ServerPresetTransformer::class);

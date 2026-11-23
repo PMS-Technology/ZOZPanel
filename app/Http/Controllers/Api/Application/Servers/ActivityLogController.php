@@ -24,6 +24,7 @@ class ActivityLogController extends ApplicationApiController
                 AllowedFilter::partial('ip'),
             ])
             ->allowedSorts(...['timestamp', 'event'])
+            ->orderBy('id')
             ->whereNotIn('activity_logs.event', ActivityLog::DISABLED_EVENTS)
             ->paginate(min($request->query('per_page', 25), 100))
             ->appends($request->query());

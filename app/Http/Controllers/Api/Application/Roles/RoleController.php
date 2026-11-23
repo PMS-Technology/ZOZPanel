@@ -40,6 +40,7 @@ class RoleController extends ApplicationApiController
         $roles = QueryBuilder::for(AdminRole::query())
             ->allowedFilters(...['id', 'name'])
             ->allowedSorts(...['id', 'name'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($roles, AdminRoleTransformer::class);

@@ -47,7 +47,8 @@ class NestController extends ApplicationApiController
 
         $nests = QueryBuilder::for(Nest::query())
             ->allowedFilters(...['id', 'name', 'author'])
-            ->allowedSorts(...['id', 'name', 'author']);
+            ->allowedSorts(...['id', 'name', 'author'])
+            ->orderBy('id');
         if ($perPage > 0) {
             $nests = $nests->paginate($perPage);
         }

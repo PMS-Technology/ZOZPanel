@@ -40,6 +40,7 @@ class LinkController extends ApplicationApiController
                 'visible',
             ])
             ->allowedSorts(...['id', 'visible', 'name'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($links, LinkTransformer::class);

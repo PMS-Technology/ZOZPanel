@@ -43,6 +43,7 @@ class ProductController extends ApplicationApiController
             ->where('category_uuid', $category->uuid)
             ->allowedFilters(...['id', 'name'])
             ->allowedSorts(...['id', 'name', 'price'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($products, ProductTransformer::class);

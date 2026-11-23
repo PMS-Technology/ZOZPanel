@@ -43,6 +43,7 @@ class CategoryController extends ApplicationApiController
         $categories = QueryBuilder::for(Category::query())
             ->allowedFilters(...['id', 'name'])
             ->allowedSorts(...['id', 'name', 'created_at', 'visible'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($categories, CategoryTransformer::class);

@@ -44,6 +44,7 @@ class NodeController extends ApplicationApiController
         $nodes = QueryBuilder::for(Node::query())
             ->allowedFilters(...['id', 'uuid', 'name', 'fqdn', 'daemon_token_id'])
             ->allowedSorts(...['id', 'uuid', 'name', 'fqdn', 'memory', 'disk'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($nodes, NodeTransformer::class);

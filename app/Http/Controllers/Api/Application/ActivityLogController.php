@@ -62,6 +62,7 @@ class ActivityLogController extends ApplicationApiController
                 }),
             ])
             ->allowedSorts(...['timestamp', 'event'])
+            ->orderBy('id')
             ->paginate(min($request->query('per_page', 25), 100))
             ->appends($request->query());
 

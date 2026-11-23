@@ -49,6 +49,7 @@ class InvoiceController extends ApplicationApiController
             ])
             ->allowedSorts(...['id', 'number', 'generated_at', 'created_at'])
             ->orderBy('created_at', 'desc')
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($invoices, InvoiceTransformer::class);

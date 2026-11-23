@@ -40,6 +40,7 @@ class DatabaseController extends ApplicationApiController
         $databases = QueryBuilder::for(DatabaseHost::query())
             ->allowedFilters(...['name', 'host'])
             ->allowedSorts(...['id', 'name', 'host'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($databases, DatabaseHostTransformer::class);

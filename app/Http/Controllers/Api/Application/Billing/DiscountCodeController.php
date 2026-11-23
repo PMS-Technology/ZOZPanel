@@ -41,6 +41,7 @@ class DiscountCodeController extends ApplicationApiController
             ->allowedFilters(...['id', 'code', 'type', 'expires_at'])
             ->allowedSorts(...['id', 'code', 'value', 'type', 'uses', 'expires_at', 'created_at'])
             ->orderBy('created_at', 'desc')
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($discount_codes, DiscountCodeTransformer::class);

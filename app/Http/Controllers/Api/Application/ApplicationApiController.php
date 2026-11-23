@@ -12,6 +12,16 @@ use Everest\Services\Permission\AdminPermissionService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
+/**
+ * Base for the application API.
+ *
+ * The list endpoints add `->orderBy('id')` right after `allowedSorts(...)`. The
+ * database sorts rows with an equal sort value in an arbitrary order, so a list
+ * ordered by a column with many equal values (a flag, a state) comes back in a
+ * different order on every page: rows repeat on the next page and others are
+ * never shown. The id gives the order a fixed tiebreaker, which makes the pages
+ * follow each other.
+ */
 abstract class ApplicationApiController extends Controller
 {
     protected Fractal $fractal;

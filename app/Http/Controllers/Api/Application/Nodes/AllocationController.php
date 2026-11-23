@@ -59,6 +59,7 @@ class AllocationController extends ApplicationApiController
                 }),
             ])
             ->allowedSorts(...['id', 'ip', 'port', 'server_id'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($allocations, AllocationTransformer::class);

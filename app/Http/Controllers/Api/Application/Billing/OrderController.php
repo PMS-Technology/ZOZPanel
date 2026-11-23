@@ -38,6 +38,7 @@ class OrderController extends ApplicationApiController
             // random UUIDs, so the legacy filter on name (the server UUID prefix) never matched.
             ->allowedFilters(...['id', 'name', 'description', AllowedFilter::exact('server_id')])
             ->allowedSorts(...['id', 'name', 'total', 'is_renewal', 'created_at', 'threat_index'])
+            ->orderBy('id')
             ->paginate($perPage);
 
         return $this->transform($orders, OrderTransformer::class);

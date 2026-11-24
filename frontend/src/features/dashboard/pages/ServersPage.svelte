@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { createQuery } from '@tanstack/svelte-query';
+    import { createQuery, keepPreviousData } from '@tanstack/svelte-query';
     import { Layers, Search, ServerOff } from '@lucide/svelte';
     import { getServers } from '$lib/api/servers';
     import { getServerGroups } from '$lib/api/groups';
     import { app } from '$lib/stores/app.svelte';
     import { httpErrorToHuman } from '$lib/api/http';
     import PageHeader from '$lib/components/PageHeader.svelte';
+    import Pagination from '$lib/components/Pagination.svelte';
     import ServerCard from '../components/ServerCard.svelte';
     import ServerGroupDialog from '../components/ServerGroupDialog.svelte';
     import { Checkbox, Spinner } from '$lib/ui';
@@ -14,6 +15,7 @@
 
     let query = $state('');
     let showAll = $state(false);
+    let page = $state(1);
 
     // Debounce the filter so typing does not fire a request per keystroke.
     let debounced = $state('');
@@ -21,23 +23,38 @@
         const value = query;
         const timer = setTimeout(() => {
             debounced = value;
+            // A new search starts at the first page.
+            page = 1;
         }, 300);
 
         return () => clearTimeout(timer);
     });
 
     const serversQuery = createQuery(() => ({
-        queryKey: ['servers', { query: debounced, showAll }],
+        queryKey: ['servers', { query: debounced, showAll, page }],
         queryFn: () =>
             getServers({
                 query: debounced || undefined,
+                page,
                 // `type=admin-all` is the backend's flag for listing every server, and is
                 // only honoured for accounts that hold admin access.
                 ...(showAll && app.isAdmin ? { type: 'admin-all' } : {}),
             }),
+        // The cards of the page being left stay on screen while the next one loads.
+        placeholderData: keepPreviousData,
     }));
 
     const servers = $derived(serversQuery.data?.items ?? []);
+
+    // The last page takes over when the page being shown is gone, e.g. after a server
+    // was deleted elsewhere.
+    $effect(() => {
+        const totalPages = serversQuery.data?.pagination.totalPages;
+
+        if (totalPages && page > totalPages) {
+            page = totalPages;
+        }
+    });
 
     // Group badges on the cards; the dialog refetches this cache after any mutation.
     const groupsQuery = createQuery(() => ({
@@ -70,7 +87,12 @@
             </div>
 
             {#if app.isAdmin}
-                <Checkbox bind:checked={showAll} label="显示全部" wrapperClass="text-sm text-muted-foreground" />
+                <Checkbox
+                    bind:checked={showAll}
+                    onCheckedChange={() => (page = 1)}
+                    label="显示全部"
+                    wrapperClass="text-sm text-muted-foreground"
+                />
             {/if}
 
             <button
@@ -109,12 +131,11 @@
             {/each}
         </div>
 
-        {#if serversQuery.data && serversQuery.data.pagination.totalPages > 1}
-            <p class="mt-4 text-xs text-muted-foreground">
-                共 {serversQuery.data.pagination.total} 台服务器，当前显示第
-                {serversQuery.data.pagination.currentPage} / {serversQuery.data.pagination.totalPages} 页。
-            </p>
-        {/if}
+        <Pagination
+            pagination={serversQuery.data?.pagination}
+            currentPage={page}
+            onPageChange={p => (page = p)}
+        />
     {/if}
 </div>
 

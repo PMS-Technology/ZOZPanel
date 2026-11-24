@@ -182,4 +182,14 @@
     :global(.cm-editor.cm-focused) {
         outline: none;
     }
+
+    /**
+     * The editor fills the height of the box it sits in. Without this the editor grows
+     * with its content instead: the box around it has a fixed height and hides the
+     * overflow, so the part of the script below the fold is clipped away and cannot be
+     * reached, since the scroller inside the editor has nothing left to scroll.
+     */
+    :global(.cm-editor) {
+        height: 100%;
+    }
 </style>

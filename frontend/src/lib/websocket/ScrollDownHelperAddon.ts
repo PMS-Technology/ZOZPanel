@@ -1,7 +1,7 @@
 import type { ITerminalAddon, Terminal } from '@xterm/xterm';
 
 /**
- * Floating "scroll to bottom" pill over the terminal, ported verbatim from
+ * Floating "scroll to bottom" button over the terminal, ported from
  * plugins/XtermScrollDownHelperAddon.ts: appears once output pushes the viewport up
  * and hides again whenever the user is back at the bottom.
  */
@@ -15,6 +15,8 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
         this.terminal.onScroll(() => {
             if (this.isScrolledDown()) {
                 this.hide();
+            } else {
+                this.show();
             }
         });
 
@@ -24,7 +26,11 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
             }
         });
 
-        this.show();
+        // The button is built up front but stays hidden: it is only useful when
+        // there is output below the viewport, and the scroll handler above takes
+        // it from there.
+        this.create();
+        this.hide();
     }
 
     dispose(): void {
@@ -40,26 +46,7 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
             return;
         }
 
-        this.terminal.element.style.position = 'relative';
-
-        this.element = document.createElement('div');
-        this.element.innerHTML =
-            '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-down" class="svg-inline--fa fa-bell fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M374.6 310.6l-160 160C208.4 476.9 200.2 480 192 480s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 370.8V64c0-17.69 14.33-31.1 31.1-31.1S224 46.31 224 64v306.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0S387.1 298.1 374.6 310.6z"/></svg>';
-        this.element.style.position = 'absolute';
-        this.element.style.right = '1.5rem';
-        this.element.style.bottom = '.5rem';
-        this.element.style.padding = '.5rem';
-        this.element.style.fontSize = '1.25em';
-        this.element.style.boxShadow = '0 2px 8px #000';
-        this.element.style.backgroundColor = '#252526';
-        this.element.style.zIndex = '999';
-        this.element.style.cursor = 'pointer';
-
-        this.element.addEventListener('click', () => {
-            this.terminal.scrollToBottom();
-        });
-
-        this.terminal.element.appendChild(this.element);
+        this.create();
     }
 
     hide(): void {
@@ -70,5 +57,45 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
 
     isScrolledDown(): boolean {
         return this.terminal.buffer.active.viewportY === this.terminal.buffer.active.baseY;
+    }
+
+    /**
+     * Builds the floating button and attaches it to the terminal.
+     *
+     * The arrow is inlined with its own size instead of being styled by an icon
+     * font: the FontAwesome classes the original markup carried are gone with the
+     * Preact frontend, and without them the SVG collapsed to nothing, leaving an
+     * empty grey block in the corner of the console.
+     */
+    private create(): void {
+        if (!this.terminal || !this.terminal.element || this.element) {
+            return;
+        }
+
+        this.terminal.element.style.position = 'relative';
+
+        this.element = document.createElement('div');
+        this.element.setAttribute('role', 'button');
+        this.element.setAttribute('aria-label', '回到底部');
+        this.element.title = '回到底部';
+        this.element.innerHTML =
+            '<svg aria-hidden="true" focusable="false" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>';
+        this.element.style.position = 'absolute';
+        this.element.style.right = '1.5rem';
+        this.element.style.bottom = '.5rem';
+        this.element.style.padding = '.5rem';
+        this.element.style.fontSize = '1.25em';
+        this.element.style.color = '#ffffff';
+        this.element.style.borderRadius = '4px';
+        this.element.style.boxShadow = '0 2px 8px #000';
+        this.element.style.backgroundColor = '#252526';
+        this.element.style.zIndex = '999';
+        this.element.style.cursor = 'pointer';
+
+        this.element.addEventListener('click', () => {
+            this.terminal.scrollToBottom();
+        });
+
+        this.terminal.element.appendChild(this.element);
     }
 }

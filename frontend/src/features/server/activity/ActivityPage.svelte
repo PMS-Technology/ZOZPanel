@@ -59,7 +59,7 @@
     </PageHeader>
 
     {#if event}
-        <p class="mb-4 text-sm text-muted-foreground">
+        <p class="mb-4 text-sm text-muted-foreground [overflow-wrap:anywhere]">
             当前筛选事件：<code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{event}</code>
         </p>
     {/if}

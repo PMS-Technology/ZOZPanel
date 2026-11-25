@@ -25,14 +25,14 @@
     </div>
 
     <div class="min-w-0 flex-1">
-        <div class="flex flex-wrap items-center gap-x-2 text-sm">
-            <span class="font-semibold" title={activity.actor?.email ?? '系统用户'}>
+        <div class="flex min-w-0 flex-wrap items-center gap-x-2 text-sm [overflow-wrap:anywhere]">
+            <span class="min-w-0 font-semibold" title={activity.actor?.email ?? '系统用户'}>
                 {activity.actor?.username ?? '系统'}
             </span>
             <span class="text-muted-foreground">&bull;</span>
             <Link
                 href={eventHref}
-                class="font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
+                class="min-w-0 font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
                 title="只看此类事件"
             >
                 {activity.event}
@@ -63,7 +63,7 @@
             {/if}
         </p>
 
-        <p class="mt-1 text-xs text-muted-foreground">
+        <p class="mt-1 text-xs break-all text-muted-foreground">
             {#if activity.ip}
                 <span class="font-mono">{activity.ip}</span>
                 <span class="mx-1">|</span>

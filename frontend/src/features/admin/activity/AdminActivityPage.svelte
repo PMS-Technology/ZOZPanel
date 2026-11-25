@@ -152,9 +152,16 @@
         {:else if !logs.data.items.length}
             <p class="py-12 text-center text-sm text-muted-foreground">{hasFilters ? '没有匹配的记录。' : '暂无活动记录。'}</p>
         {:else}
-            <div class="overflow-x-auto">
+            <div class="flex flex-wrap gap-4 border-b border-border px-4 py-3 text-xs text-muted-foreground sm:hidden">
+                {#each [{ key: 'timestamp', label: '时间' }, { key: 'event', label: '事件' }] as option (option.key)}
+                    <button type="button" class="inline-flex items-center gap-1" onclick={() => toggleSort(option.key as 'timestamp' | 'event')}>
+                        {option.label}排序 {#if sort.key === option.key}{#if sort.dir === 'asc'}<ArrowUp class="size-3" />{:else}<ArrowDown class="size-3" />{/if}{/if}
+                    </button>
+                {/each}
+            </div>
+            <div class="min-w-0 overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="border-b border-border text-left text-xs text-muted-foreground">
+                    <thead class="hidden border-b border-border text-left text-xs text-muted-foreground sm:table-header-group">
                         <tr>
                             <th scope="col" class="px-4 py-2 font-medium">ID</th>
                             {@render sortHeader('timestamp', '时间')}
@@ -166,13 +173,13 @@
                     <tbody class="divide-y divide-border">
                         {#each logs.data.items as item (item.id)}
                             {@const parts = describeActivity(item.event, item.properties)}
-                            <tr class="align-top">
-                                <td class="px-4 py-3 font-mono text-xs whitespace-nowrap">{item.logId ?? '—'}</td>
-                                <td class="px-4 py-3 whitespace-nowrap" title={formatDistanceToNowStrict(item.timestamp, { addSuffix: true, locale: zhCN })}>
+                            <tr class="block px-4 py-3 align-top sm:table-row sm:p-0">
+                                <td class="block font-mono text-xs text-muted-foreground sm:table-cell sm:px-4 sm:py-3 sm:whitespace-nowrap">#{item.logId ?? '—'}</td>
+                                <td class="block pt-1 text-xs whitespace-nowrap text-muted-foreground sm:table-cell sm:px-4 sm:py-3 sm:text-sm sm:text-foreground" title={formatDistanceToNowStrict(item.timestamp, { addSuffix: true, locale: zhCN })}>
                                     {format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')}
                                 </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex flex-wrap items-center gap-1.5">
+                                <td class="block min-w-0 pt-2 [overflow-wrap:anywhere] sm:table-cell sm:px-4 sm:py-3">
+                                    <div class="flex min-w-0 flex-wrap items-center gap-1.5">
                                         <Avatar src={item.actor?.image} name={item.actor?.uuid ?? 'system'} size={20} />
                                         {#if item.actorId}
                                             <Link href="/admin/users/{item.actorId}" class="font-semibold text-primary hover:underline">
@@ -183,8 +190,8 @@
                                         {/if}
                                         {#each item.subjects as subject, i (`${subject.type}-${subject.id}-${i}`)}
                                             {@const href = subjectHref(subject)}
-                                            <span class="inline-flex items-center gap-1 text-muted-foreground" title={subject.type}>
-                                                <ArrowRight class="size-3.5" />
+                                            <span class="inline-flex min-w-0 items-center gap-1 text-muted-foreground" title={subject.type}>
+                                                <ArrowRight class="size-3.5 shrink-0" />
                                                 {#if href}
                                                     <Link {href} class="hover:text-primary">{subject.identifier ?? `#${subject.id}`}</Link>
                                                 {:else}
@@ -198,11 +205,11 @@
                                         {/each}
                                     </div>
                                 </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center gap-2">
+                                <td class="block min-w-0 pt-2 [overflow-wrap:anywhere] sm:table-cell sm:px-4 sm:py-3">
+                                    <div class="flex min-w-0 flex-wrap items-center gap-2">
                                         <Link
                                             href="/admin/activity#event={encodeURIComponent(item.event)}"
-                                            class="font-mono text-xs text-muted-foreground hover:text-primary"
+                                            class="min-w-0 font-mono text-xs text-muted-foreground hover:text-primary"
                                         >
                                             {item.event}
                                         </Link>
@@ -232,7 +239,7 @@
                                         {/if}
                                     </p>
                                 </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
+                                <td class="block pt-2 break-all sm:table-cell sm:px-4 sm:py-3 sm:whitespace-nowrap">
                                     {#if item.ip}
                                         <Link href="/admin/activity#ip={encodeURIComponent(item.ip)}" class="font-mono text-xs hover:text-primary">
                                             {item.ip}

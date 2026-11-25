@@ -62,20 +62,20 @@
     {@const st = serverStatus(s.status)}
     {@const primary = s.allocations.find(a => a.id === s.allocationId)}
     <div class="mb-4 flex flex-wrap items-center gap-3">
-        <div class="min-w-0 flex-1">
+        <div class="min-w-0 w-full sm:w-auto sm:flex-1">
             <h1 class="flex flex-wrap items-center gap-2 font-header text-xl font-semibold">
-                <span class="truncate">{s.name}</span>
+                <span class="min-w-0 break-all">{s.name}</span>
                 <span class={cn(pill, st.class)}>{st.label}</span>
                 {#if primary}<span class={cn(pill, 'bg-muted font-mono text-muted-foreground')}>{allocationText(primary)}</span>{/if}
                 {#if s.billingProductId}<span class={cn(pill, 'bg-primary/15 text-primary')}>计费</span>{/if}
             </h1>
-            <p class="truncate font-mono text-xs text-muted-foreground">{s.uuid} · {s.identifier}</p>
+            <p class="break-all font-mono text-xs text-muted-foreground">{s.uuid} · {s.identifier}</p>
         </div>
         <Button variant="outline" href="/server/{s.identifier}"><ExternalLink />以用户视角查看</Button>
         <Button variant="ghost" href="/admin/servers"><ArrowLeft />返回列表</Button>
     </div>
 
-    <nav class="mb-6 flex gap-1 overflow-x-auto border-b border-border" aria-label="服务器分类">
+    <nav class="mb-6 flex flex-wrap gap-x-1 border-b border-border" aria-label="服务器分类">
         {#each tabs as t (t.path)}
             {@const Icon = t.icon}
             <Link

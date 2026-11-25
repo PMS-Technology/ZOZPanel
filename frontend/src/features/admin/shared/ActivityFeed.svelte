@@ -36,9 +36,9 @@
         <ul class="divide-y divide-border">
             {#each activity.data.items as item (item.id)}
                 {@const parts = describeActivity(item.event, item.properties)}
-                <li class="flex flex-wrap items-start gap-x-4 gap-y-1 px-4 py-3 text-sm">
-                    <span class="w-40 shrink-0 text-xs whitespace-nowrap text-muted-foreground">{format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')}</span>
-                    <span class="min-w-0 flex-1">
+                <li class="flex min-w-0 flex-col gap-1 px-4 py-3 text-sm sm:flex-row sm:items-start sm:gap-x-4">
+                    <span class="shrink-0 text-xs whitespace-nowrap text-muted-foreground sm:w-40">{format(item.timestamp, 'yyyy-MM-dd HH:mm:ss')}</span>
+                    <span class="min-w-0 break-words sm:flex-1 [overflow-wrap:anywhere]">
                         <span class="font-semibold">{item.actor?.username ?? '系统'}</span>
                         {#if parts}
                             {#each parts as part, i (i)}{#if part.strong}<strong>{part.text}</strong>{:else}{part.text}{/if}{/each}
@@ -47,7 +47,7 @@
                         {/if}
                         <Link href="/admin/activity#event={encodeURIComponent(item.event)}" class="ml-2 font-mono text-xs text-muted-foreground hover:text-primary">{item.event}</Link>
                     </span>
-                    {#if item.ip}<span class="font-mono text-xs text-muted-foreground">{item.ip}</span>{/if}
+                    {#if item.ip}<span class="break-all font-mono text-xs text-muted-foreground">{item.ip}</span>{/if}
                 </li>
             {/each}
         </ul>

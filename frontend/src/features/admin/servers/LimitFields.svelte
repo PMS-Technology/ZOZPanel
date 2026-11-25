@@ -22,7 +22,7 @@
         { key: 'allocations', label: '端口分配数', hint: '用户可以自行添加的分配数量。' },
         { key: 'backups', label: '备份数', hint: '可以创建的备份数量。' },
         { key: 'databases', label: '数据库数', hint: '可以创建的数据库数量。' },
-        { key: 'subusers', label: '子用户数', hint: '可以添加的子用户数量。' },
+        { key: 'subusers', label: '子用户数', hint: '可以添加的子用户数量，-1 表示不限制。' },
     ];
 </script>
 

@@ -57,9 +57,10 @@ export function limitErrors(v: LimitInputs): Partial<Record<keyof LimitInputs, s
     if (!int(v.io, 10, 1000)) e.io = '需要在 10–1000 之间。';
     if (!int(v.cpu, 0)) e.cpu = '请输入不小于 0 的整数。';
     if (v.threads.trim() && !/^[0-9,-]+$/.test(v.threads.trim())) e.threads = '只能包含数字、逗号和连字符，例如 0-1,3。';
-    for (const k of ['allocations', 'backups', 'databases', 'subusers'] as const) {
+    for (const k of ['allocations', 'backups', 'databases'] as const) {
         if (!int(v[k], 0)) e[k] = '请输入不小于 0 的整数。';
     }
+    if (!int(v.subusers, -1)) e.subusers = '请输入不小于 -1 的整数。';
 
     return e;
 }

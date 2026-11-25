@@ -70,7 +70,7 @@ class ModuleController extends ApplicationApiController
         Activity::event('admin:auth:module:update')
             ->property('module', $request->input('module'))
             ->property('key', $request->input('key'))
-            ->property('value', $request->input('value'))
+            ->property('value', $request->input('key') === 'client_secret' ? '[redacted]' : $request->input('value'))
             ->description('An authentication module setting was updated')
             ->log();
 

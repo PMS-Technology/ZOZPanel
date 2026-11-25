@@ -5,7 +5,7 @@ import http from '$lib/api/http';
  * Every setting lands in `settings::modules:auth:<module>:<key>`.
  */
 
-export type AuthModuleName = 'onboarding' | 'jguard' | 'discord' | 'google';
+export type AuthModuleName = 'onboarding' | 'jguard' | 'discord' | 'google' | 'github' | 'microsoft' | 'oidc';
 
 /** Settings that are not add-on modules but share the same update endpoint. */
 export type AuthSettingGroup = AuthModuleName | 'registration' | 'security';

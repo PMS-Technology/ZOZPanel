@@ -61,7 +61,7 @@ export const passkeysSupported = () => typeof window.PublicKeyCredential !== 'un
 export const isPasskeyCancellation = (error: unknown) => error instanceof Error && ['NotAllowedError', 'AbortError'].includes(error.name);
 
 /** Returns the provider's authorisation URL to send the browser to. */
-export async function externalLogin(provider: 'discord' | 'google', captcha?: CaptchaPayload): Promise<string> {
+export async function externalLogin(provider: 'discord' | 'google' | 'github' | 'microsoft' | 'oidc', captcha?: CaptchaPayload): Promise<string> {
     await csrf();
     const { data } = await http.post(`/auth/modules/${provider}`, { ...(captcha ?? {}) });
 

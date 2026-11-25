@@ -76,15 +76,24 @@
     const secrets = $state({
         discord: { client_id: '', client_secret: '' },
         google: { client_id: '', client_secret: '' },
+        github: { client_id: '', client_secret: '' },
+        microsoft: { client_id: '', client_secret: '' },
+        oidc: { client_id: '', client_secret: '' },
     });
+    let tenant = $state(auth.modules.microsoft.tenant ?? '');
+    let issuer = $state(auth.modules.oidc.issuer ?? '');
 
-    function saveSecrets(provider: 'discord' | 'google') {
+    function saveSecrets(provider: 'discord' | 'google' | 'github' | 'microsoft' | 'oidc') {
         const values = Object.fromEntries(Object.entries(secrets[provider]).filter(([, v]) => v.trim()).map(([k, v]) => [k, v.trim()]));
+        if (provider === 'microsoft' && tenant.trim() !== auth.modules.microsoft.tenant) values.tenant = tenant.trim();
+        if (provider === 'oidc' && issuer.trim() !== auth.modules.oidc.issuer) values.issuer = issuer.trim();
         if (!Object.keys(values).length) return;
 
         void save(provider, provider, values, a => {
             if (values.client_id) a.modules[provider].clientId = true;
             if (values.client_secret) a.modules[provider].clientSecret = true;
+            if (provider === 'microsoft' && values.tenant !== undefined) a.modules.microsoft.tenant = values.tenant;
+            if (provider === 'oidc' && values.issuer !== undefined) a.modules.oidc.issuer = values.issuer;
         }).then(ok => {
             // Keep what was typed if the save failed, so it can be retried.
             if (ok) secrets[provider] = { client_id: '', client_secret: '' };
@@ -103,6 +112,9 @@
         { name: 'jguard', title: 'jGuard', icon: ShieldHalf, description: '识别小号注册，并可以给新用户加一段访问延迟。' },
         { name: 'discord', title: 'Discord 登录', icon: KeyRound, description: '允许用户通过 Discord 账号注册和登录。' },
         { name: 'google', title: 'Google 登录', icon: KeyRound, description: '允许用户通过 Google 账号注册和登录。' },
+        { name: 'github', title: 'GitHub 登录', icon: KeyRound, description: '允许用户通过 GitHub 账号注册和登录。' },
+        { name: 'microsoft', title: 'Microsoft 登录', icon: KeyRound, description: '允许用户通过 Microsoft 租户账号登录。' },
+        { name: 'oidc', title: 'OpenID Connect 登录', icon: KeyRound, description: '接入支持 OIDC 的身份提供商。' },
     ];
     const available = $derived(catalogue.filter(m => !auth.modules[m.name].enabled));
 
@@ -165,7 +177,7 @@
     {/if}
 {/snippet}
 
-{#snippet oauthCard(provider: 'discord' | 'google', title: string)}
+{#snippet oauthCard(provider: 'discord' | 'google' | 'github' | 'microsoft' | 'oidc', title: string)}
     {@const flags = auth.modules[provider]}
     <Card>
         <CardHeader>
@@ -198,6 +210,14 @@
                         />
                     </div>
                 {/each}
+                {#if provider === 'microsoft'}
+                    <div class="space-y-1.5"><Label for="microsoft-tenant">租户 ID</Label><Input id="microsoft-tenant" bind:value={tenant} disabled={!canUpdate} placeholder="租户 UUID" /></div>
+                {:else if provider === 'oidc'}
+                    <div class="space-y-1.5"><Label for="oidc-issuer">Issuer URL</Label><Input id="oidc-issuer" bind:value={issuer} disabled={!canUpdate} placeholder="https://identity.example.com" /></div>
+                {/if}
+                {#if provider === 'microsoft' || provider === 'oidc'}
+                    <p class="text-xs text-muted-foreground">身份提供商必须返回已验证邮箱（email_verified）。</p>
+                {/if}
                 {#if provider === 'discord'}
                     <p class="text-xs text-muted-foreground">
                         在 <a href="https://discord.com/developers/applications" target="_blank" rel="noreferrer" class="text-primary hover:underline">Discord 开发者门户</a> 获取。
@@ -213,7 +233,7 @@
                             type="submit"
                             size="sm"
                             loading={saving === provider}
-                            disabled={!secrets[provider].client_id.trim() && !secrets[provider].client_secret.trim()}
+                            disabled={!secrets[provider].client_id.trim() && !secrets[provider].client_secret.trim() && !(provider === 'microsoft' && tenant.trim() !== auth.modules.microsoft.tenant) && !(provider === 'oidc' && issuer.trim() !== auth.modules.oidc.issuer)}
                         >
                             保存
                         </Button>
@@ -405,6 +425,9 @@
 
         {#if auth.modules.discord.enabled}{@render oauthCard('discord', 'Discord 登录')}{/if}
         {#if auth.modules.google.enabled}{@render oauthCard('google', 'Google 登录')}{/if}
+        {#if auth.modules.github.enabled}{@render oauthCard('github', 'GitHub 登录')}{/if}
+        {#if auth.modules.microsoft.enabled}{@render oauthCard('microsoft', 'Microsoft 登录')}{/if}
+        {#if auth.modules.oidc.enabled}{@render oauthCard('oidc', 'OpenID Connect 登录')}{/if}
     </div>
 </div>
 

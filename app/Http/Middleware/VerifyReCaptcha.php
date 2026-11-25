@@ -36,7 +36,7 @@ class VerifyReCaptcha
         // Discord and Google's OAuth flows carry their own CSRF "state" parameter through
         // this same middleware, which is not an encrypted captcha payload. Their state
         // values are prefixed so we can recognise and skip them here.
-        if (is_string($state) && (str_starts_with($state, 'discord-') || str_starts_with($state, 'google-'))) {
+        if (is_string($state) && (str_starts_with($state, 'discord-') || str_starts_with($state, 'google-') || ($request->routeIs('auth.modules.github.authenticate') && str_starts_with($state, 'github-')) || ($request->routeIs('auth.modules.openid.authenticate') && (str_starts_with($state, 'oidc-') || str_starts_with($state, 'microsoft-'))))) {
             return $next($request);
         }
 

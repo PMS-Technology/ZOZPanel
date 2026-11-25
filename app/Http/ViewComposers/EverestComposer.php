@@ -50,6 +50,23 @@ class EverestComposer
                         'clientId' => !empty(config('modules.auth.google.client_id', false)),
                         'clientSecret' => !empty(config('modules.auth.google.client_secret')),
                     ],
+                    'github' => [
+                        'enabled' => boolval(config('modules.auth.github.enabled', false)),
+                        'clientId' => !empty(config('modules.auth.github.client_id')),
+                        'clientSecret' => !empty(config('modules.auth.github.client_secret')),
+                    ],
+                    'microsoft' => [
+                        'enabled' => boolval(config('modules.auth.microsoft.enabled', false)),
+                        'clientId' => !empty(config('modules.auth.microsoft.client_id')),
+                        'clientSecret' => !empty(config('modules.auth.microsoft.client_secret')),
+                        'tenant' => config('modules.auth.microsoft.tenant', ''),
+                    ],
+                    'oidc' => [
+                        'enabled' => boolval(config('modules.auth.oidc.enabled', false)),
+                        'clientId' => !empty(config('modules.auth.oidc.client_id')),
+                        'clientSecret' => !empty(config('modules.auth.oidc.client_secret')),
+                        'issuer' => config('modules.auth.oidc.issuer', ''),
+                    ],
                     'onboarding' => [
                         'enabled' => boolval(config('modules.auth.onboarding.enabled', false)),
                         'content' => config('modules.auth.onboarding.content', ''),

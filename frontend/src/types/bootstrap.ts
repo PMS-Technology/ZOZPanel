@@ -115,6 +115,9 @@ export interface EverestSettings {
             jguard: { enabled: boolean; delay?: number; sensitivity?: 'low' | 'medium' | 'high' };
             discord: { enabled: boolean; clientId: boolean; clientSecret: boolean };
             google: { enabled: boolean; clientId: boolean; clientSecret: boolean };
+            github: { enabled: boolean; clientId: boolean; clientSecret: boolean };
+            microsoft: { enabled: boolean; clientId: boolean; clientSecret: boolean; tenant: string };
+            oidc: { enabled: boolean; clientId: boolean; clientSecret: boolean; issuer: string };
             onboarding: { enabled: boolean; content?: string };
         };
     };

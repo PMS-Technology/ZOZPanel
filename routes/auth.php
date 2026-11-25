@@ -44,6 +44,14 @@ Route::middleware(['throttle:authentication'])->group(function () {
         ->middleware('recaptcha')
         ->name('auth.modules.google.authenticate');
 
+    Route::post('/modules/github', [Auth\Modules\GithubLoginController::class, 'requestToken'])->middleware('recaptcha');
+    Route::get('/modules/github/authenticate', [Auth\Modules\GithubLoginController::class, 'authenticate'])
+        ->middleware('recaptcha')
+        ->name('auth.modules.github.authenticate');
+
+    Route::post('/modules/{provider}', [Auth\Modules\OpenIdLoginController::class, 'requestToken'])->whereIn('provider', ['microsoft', 'oidc'])->middleware('recaptcha');
+    Route::get('/modules/{provider}/authenticate', [Auth\Modules\OpenIdLoginController::class, 'authenticate'])->whereIn('provider', ['microsoft', 'oidc'])->middleware('recaptcha')->name('auth.modules.openid.authenticate');
+
     // Forgot password route. A post to this endpoint will trigger an
     // email to be sent containing a reset token.
     Route::post('/password', [Auth\ForgotPasswordController::class, 'verify'])

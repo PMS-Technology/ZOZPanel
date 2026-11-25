@@ -42,7 +42,7 @@
         },
     });
 
-    let other = $state<'passkey' | 'discord' | 'google' | null>(null);
+    let other = $state<'passkey' | 'discord' | 'google' | 'github' | 'microsoft' | 'oidc' | null>(null);
     let otherError = $state('');
 
     async function withPasskey() {
@@ -57,7 +57,7 @@
         }
     }
 
-    async function withProvider(provider: 'discord' | 'google') {
+    async function withProvider(provider: 'discord' | 'google' | 'github' | 'microsoft' | 'oidc') {
         other = provider;
         otherError = '';
         try {
@@ -92,11 +92,14 @@
         {/if}
     </form>
 
-    {#if modules?.discord.enabled || modules?.google.enabled || registration}
+    {#if modules?.discord.enabled || modules?.google.enabled || modules?.github.enabled || modules?.microsoft.enabled || modules?.oidc.enabled || registration}
         <div class="my-4 flex items-center gap-3 text-xs text-muted-foreground"><span class="h-px flex-1 bg-border"></span>或<span class="h-px flex-1 bg-border"></span></div>
         <div class="grid gap-2">
             {#if modules?.discord.enabled}<Button variant="outline" loading={other === 'discord'} disabled={busy} onclick={() => withProvider('discord')}>使用 Discord 登录</Button>{/if}
             {#if modules?.google.enabled}<Button variant="outline" loading={other === 'google'} disabled={busy} onclick={() => withProvider('google')}>使用 Google 登录</Button>{/if}
+            {#if modules?.github.enabled}<Button variant="outline" loading={other === 'github'} disabled={busy} onclick={() => withProvider('github')}>使用 GitHub 登录</Button>{/if}
+            {#if modules?.microsoft.enabled}<Button variant="outline" loading={other === 'microsoft'} disabled={busy} onclick={() => withProvider('microsoft')}>使用 Microsoft 登录</Button>{/if}
+            {#if modules?.oidc.enabled}<Button variant="outline" loading={other === 'oidc'} disabled={busy} onclick={() => withProvider('oidc')}>使用 OpenID Connect 登录</Button>{/if}
             {#if registration}<Button variant="ghost" href="/auth/register" disabled={busy}><Mail />用邮箱注册</Button>{/if}
         </div>
     {/if}

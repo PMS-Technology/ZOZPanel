@@ -2,14 +2,14 @@
 
 namespace Everest\Http\Controllers\Auth\Modules;
 
-use Everest\Exceptions\DisplayException;
-use Everest\Http\Controllers\Auth\AbstractLoginController;
 use Everest\Models\User;
-use Everest\Services\Auth\OpenIdService;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use Everest\Exceptions\DisplayException;
+use Everest\Services\Auth\OpenIdService;
+use Everest\Http\Controllers\Auth\AbstractLoginController;
 
 class OpenIdLoginController extends AbstractLoginController
 {
@@ -86,8 +86,10 @@ class OpenIdLoginController extends AbstractLoginController
             if (!preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i', $tenant)) {
                 throw new DisplayException('Configure a Microsoft tenant ID (UUID).');
             }
+
             return "https://login.microsoftonline.com/$tenant/v2.0";
         }
+
         return (string) config('modules.auth.oidc.issuer');
     }
 }

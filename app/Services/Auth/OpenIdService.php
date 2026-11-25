@@ -2,14 +2,16 @@
 
 namespace Everest\Services\Auth;
 
-use Everest\Exceptions\DisplayException;
-use Illuminate\Support\Facades\Http;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use phpseclib3\Crypt\RSA;
+use Lcobucci\JWT\Token\Plain;
+use Lcobucci\JWT\Configuration;
 use phpseclib3\Math\BigInteger;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use phpseclib3\Crypt\RSA\PublicKey;
+use Illuminate\Support\Facades\Http;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Everest\Exceptions\DisplayException;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 class OpenIdService
 {
@@ -32,6 +34,9 @@ class OpenIdService
         try {
             $config = Configuration::forUnsecuredSigner();
             $token = $config->parser()->parse($jwt);
+            if (!$token instanceof Plain) {
+                throw new \RuntimeException('Invalid ID token.');
+            }
             $kid = $token->headers()->get('kid');
             if ($token->headers()->get('alg') !== 'RS256' || !is_string($kid) || $kid === '') {
                 throw new \RuntimeException('Unsupported ID token signature.');
@@ -49,10 +54,11 @@ class OpenIdService
                 if ($decoded === false) {
                     throw new \RuntimeException('Invalid RSA key.');
                 }
+
                 return $decoded;
             };
             $key = RSA::loadPublicKey(['n' => new BigInteger($decode($matches[0]['n'] ?? null), 256), 'e' => new BigInteger($decode($matches[0]['e'] ?? null), 256)]);
-            if ($key->getLength() < 2048 || !$config->validator()->validate($token, new SignedWith(new Sha256(), InMemory::plainText($key->toString('PKCS8'))))) {
+            if (!$key instanceof PublicKey || $key->getLength() < 2048 || !$config->validator()->validate($token, new SignedWith(new Sha256(), InMemory::plainText($key->toString('PKCS8'))))) {
                 throw new \RuntimeException('Invalid signature.');
             }
             $claims = $token->claims();

@@ -2,13 +2,13 @@
 
 namespace Everest\Http\Controllers\Auth\Modules;
 
-use Everest\Exceptions\DisplayException;
-use Everest\Http\Controllers\Auth\AbstractLoginController;
 use Everest\Models\User;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use Everest\Exceptions\DisplayException;
+use Everest\Http\Controllers\Auth\AbstractLoginController;
 
 class GithubLoginController extends AbstractLoginController
 {

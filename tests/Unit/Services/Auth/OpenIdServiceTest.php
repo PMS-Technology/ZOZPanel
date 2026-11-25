@@ -2,14 +2,14 @@
 
 namespace Everest\Tests\Unit\Services\Auth;
 
+use phpseclib3\Crypt\RSA;
+use Everest\Tests\TestCase;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Illuminate\Support\Facades\Http;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Everest\Exceptions\DisplayException;
 use Everest\Services\Auth\OpenIdService;
-use Everest\Tests\TestCase;
-use Illuminate\Support\Facades\Http;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use phpseclib3\Crypt\RSA;
 
 class OpenIdServiceTest extends TestCase
 {
@@ -30,34 +30,34 @@ class OpenIdServiceTest extends TestCase
         return [$builder->getToken($config->signer(), $config->signingKey())->toString(), ['issuer' => 'https://issuer.example', 'jwks_uri' => 'https://issuer.example/keys']];
     }
 
-    public function test_accepts_a_signed_token_with_verified_email(): void
+    public function testAcceptsASignedTokenWithVerifiedEmail(): void
     {
         [$jwt, $metadata] = $this->setupToken();
         $this->assertSame('person@example.com', (new OpenIdService())->email($metadata, 'client', $jwt, 'nonce', null));
     }
 
-    public function test_rejects_unverified_email(): void
+    public function testRejectsUnverifiedEmail(): void
     {
         [$jwt, $metadata] = $this->setupToken(['verified' => false]);
         $this->expectException(DisplayException::class);
         (new OpenIdService())->email($metadata, 'client', $jwt, 'nonce', null);
     }
 
-    public function test_rejects_wrong_nonce(): void
+    public function testRejectsWrongNonce(): void
     {
         [$jwt, $metadata] = $this->setupToken(['nonce' => 'wrong']);
         $this->expectException(DisplayException::class);
         (new OpenIdService())->email($metadata, 'client', $jwt, 'nonce', null);
     }
 
-    public function test_rejects_wrong_audience(): void
+    public function testRejectsWrongAudience(): void
     {
         [$jwt, $metadata] = $this->setupToken(['audience' => 'other']);
         $this->expectException(DisplayException::class);
         (new OpenIdService())->email($metadata, 'client', $jwt, 'nonce', null);
     }
 
-    public function test_rejects_untrusted_signing_key(): void
+    public function testRejectsUntrustedSigningKey(): void
     {
         [$jwt, $metadata] = $this->setupToken();
         $other = RSA::createKey(2048);

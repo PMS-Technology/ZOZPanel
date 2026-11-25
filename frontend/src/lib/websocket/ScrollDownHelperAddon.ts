@@ -12,25 +12,18 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
     activate(terminal: Terminal): void {
         this.terminal = terminal;
 
-        this.terminal.onScroll(() => {
-            if (this.isScrolledDown()) {
-                this.hide();
-            } else {
-                this.show();
-            }
-        });
-
-        this.terminal.onLineFeed(() => {
-            if (!this.isScrolledDown()) {
-                this.show();
-            }
-        });
-
-        // The button is built up front but stays hidden: it is only useful when
-        // there is output below the viewport, and the scroll handler above takes
-        // it from there.
         this.create();
-        this.hide();
+
+        // xterm's public onScroll event only fires for scrolls the terminal performs
+        // itself; a scroll the user makes with the wheel or a touch gesture goes
+        // through the viewport element and never reaches it. The viewport's own
+        // scroll event covers every case, so that is what drives the button.
+        this.terminal.element
+            ?.querySelector('.xterm-viewport')
+            ?.addEventListener('scroll', () => this.sync(), { passive: true });
+
+        this.terminal.onScroll(() => this.sync());
+        this.terminal.onLineFeed(() => this.sync());
     }
 
     dispose(): void {
@@ -57,6 +50,15 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
 
     isScrolledDown(): boolean {
         return this.terminal.buffer.active.viewportY === this.terminal.buffer.active.baseY;
+    }
+
+    /** Shows the button when there is output below the viewport, hides it otherwise. */
+    private sync(): void {
+        if (this.isScrolledDown()) {
+            this.hide();
+        } else {
+            this.show();
+        }
     }
 
     /**
@@ -97,5 +99,9 @@ export class ScrollDownHelperAddon implements ITerminalAddon {
         });
 
         this.terminal.element.appendChild(this.element);
+
+        // The button is only useful when there is output below the viewport, so it
+        // starts hidden and the scroll handlers above take it from there.
+        this.hide();
     }
 }

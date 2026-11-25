@@ -78,6 +78,13 @@
         terminal.loadAddon(scrollDownHelperAddon);
         fitAddon.fit();
 
+        // Let the browser handle touch scrolling on the viewport, including momentum
+        // and scroll chaining at its edges. xterm otherwise handles touch moves itself.
+        const viewport = terminal.element?.querySelector<HTMLElement>('.xterm-viewport');
+        const stopTouchPropagation = (event: TouchEvent) => event.stopPropagation();
+        viewport?.addEventListener('touchstart', stopTouchPropagation, { passive: true });
+        viewport?.addEventListener('touchmove', stopTouchPropagation, { passive: true });
+
         // Ported key handling: copy instead of interrupt, Escape closes the search bar.
         terminal.attachCustomKeyEventHandler(event => {
             if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
@@ -109,6 +116,8 @@
 
         return () => {
             observer.disconnect();
+            viewport?.removeEventListener('touchstart', stopTouchPropagation);
+            viewport?.removeEventListener('touchmove', stopTouchPropagation);
             terminal.dispose();
         };
     });
@@ -233,7 +242,7 @@
         // The console is given a definite height rather than growing with its
         // content: xterm measures its container to work out how many rows fit, so a
         // container that sized itself to the terminal would grow on every fit.
-        expand ? 'h-[calc(100dvh-11rem)] min-h-[24rem]' : 'h-[calc(100dvh-19rem)] min-h-[20rem]',
+        expand ? 'h-[calc(100svh-11rem)] min-h-[24rem]' : 'h-[calc(100svh-19rem)] min-h-[20rem]',
     )}
 >
     {#if !store.connected}
@@ -282,7 +291,7 @@
         {/if}
     </div>
 
-    <div class="relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-t p-1 font-mono text-sm sm:p-2">
+    <div class="terminal-output relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-t p-1 font-mono text-sm sm:p-2">
         <div bind:this={container} class="h-full"></div>
     </div>
 
@@ -308,3 +317,13 @@
         </div>
     {/if}
 </div>
+
+<style>
+    /* The viewport sits behind xterm's screen. On touch screens it needs to be
+       the hit target for native scrolling; events still bubble to xterm. */
+    @media (pointer: coarse) {
+        .terminal-output :global(.xterm-screen) {
+            pointer-events: none;
+        }
+    }
+</style>
